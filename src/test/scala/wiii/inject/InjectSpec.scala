@@ -7,7 +7,7 @@ import org.scalatest.WordSpecLike
 /**
  * utility for wrapping up guice based actor system tests
  */
-trait ActorInjectSpec extends WordSpecLike {
+trait InjectSpec extends WordSpecLike {
 
     def injectTest(name: String)(test: ActorSystem => Unit): Unit = injectTest(name, Seq())(test)
 

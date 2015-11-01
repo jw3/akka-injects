@@ -1,12 +1,12 @@
 package wiii.inject
 
 import akka.actor.{Actor, ActorRef}
+import com.typesafe.config.Config
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 import wiii.inject.ExtensionSpec.TestModule
-import com.typesafe.config.Config
 
-class ExtensionSpec extends ActorInjectSpec with Matchers {
+class ExtensionSpec extends InjectSpec with Matchers {
     injectTest("empty inject") { sys =>
         val inj = InjectExt(sys)
         inj.injector.getInstance(classOf[String]) shouldBe empty

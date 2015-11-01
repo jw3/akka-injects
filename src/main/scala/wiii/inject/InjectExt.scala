@@ -8,23 +8,25 @@ import net.ceedubs.ficus.Ficus._
 
 import scala.collection.JavaConversions._
 
-
+/**
+ * Akka [[Extension]] which encapsulates a Guice [[Injector]]
+ * @param injector
+ */
 class InjectExtImpl(val injector: Injector) extends Extension
 
-object InjectExt
-    extends ExtensionId[InjectExtImpl] with ExtensionIdProvider with InjectExtBuilder {
-
+object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider with InjectExtBuilder {
     private val manualModules: collection.mutable.Set[Module] = collection.mutable.Set[Module]()
 
+    /**
+     * Manually add modules to the injector
+     * All modules must be added prior to creating the ActorSystem
+     */
     def addModules(m: Module*): InjectExtBuilder = {
         manualModules.addAll(m)
         this
     }
 
-    def clearModules: InjectExtBuilder = {
-        manualModules.clear()
-        this
-    }
+    // internals \\
 
     override def createExtension(sys: ExtendedActorSystem) = {
         import InjectExtBuilder._
@@ -37,10 +39,10 @@ object InjectExt
             case v => throw new IllegalArgumentException(s"invalid $ModuleDiscoveryModeKey value, $v")
         }
 
-        val injector = Guice.createInjector(new ConfigModule(config) :: modules)
+        val finalModules = new ConfigModule(config) :: modules
+        val injector = Guice.createInjector(finalModules)
         new InjectExtImpl(injector)
     }
-
 
     override def lookup = InjectExt
 
@@ -51,13 +53,28 @@ object InjectExt
     }
 }
 
+/**
+ * Defines the module adding interface on the InjectExt
+ */
 trait InjectExtBuilder {
-    self: ExtensionId[_] =>
-
+    this: ExtensionId[_] =>
     def addModules(m: Module*): InjectExtBuilder
-    def clearModules: InjectExtBuilder
 }
 
+/**
+ * Configuration options for the InjectExt
+ *
+ * - ModuleDiscoveryModeKey: specifies the module discovery strategy [manual | config | spi]
+ * - CfgModuleDiscoveryKey: specifies the FQCN list of Modules when in 'config' mode
+ *
+ * - ManualModuleDiscovery: discovery mode that only uses Modules added through InjectExtBuilder
+ * - CfgModuleDiscovery: discovery mode that includes modules specified in the CfgModuleDiscoveryKey
+ * - SpiModuleDiscovery: discovery mode that includes modules specified through SPI
+ *
+ * Notes:
+ * - All modes will include manually added modules
+ * - The default discovery mode is ManualModuleDiscovery
+ */
 object InjectExtBuilder {
     val ModuleDiscoveryModeKey = "akka.inject.mode"
     val CfgModuleDiscoveryKey = "akka.inject.modules"
