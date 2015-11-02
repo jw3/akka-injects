@@ -1,37 +1,28 @@
 package wiii.inject
 
-import akka.actor.{Actor, ActorRef}
 import com.typesafe.config.Config
-import net.codingwell.scalaguice.ScalaModule
+import net.codingwell.scalaguice.KeyExtensions._
+import net.codingwell.scalaguice._
 import org.scalatest.Matchers
-import wiii.inject.ExtensionSpec.TestModule
 
+/**
+ * test various aspects of the [[InjectExt]] Akka Extension
+ */
 class ExtensionSpec extends InjectSpec with Matchers {
-    injectTest("empty inject") { sys =>
-        val inj = InjectExt(sys)
-        inj.injector.getInstance(classOf[String]) shouldBe empty
-    }
+    "inject extension" should {
+        injectTest("empty injector when no modules and no config", cfg = cfg(injCfg(false))) { implicit sys =>
+            val inj = InjectExt(sys).injector
+            inj.getExistingBinding(typeLiteral[Config].toKey) shouldBe null
+        }
 
-    injectTest("test module inject", Seq(TestModule)) { sys =>
-        val inj = InjectExt(sys)
-        inj.injector.getInstance(classOf[String]) shouldBe "foo"
-    }
+        injectTest("empty injector when no modules, with config (explicitly)", cfg = cfg(injCfg(true))) { implicit sys =>
+            val inj = InjectExt(sys).injector
+            inj.getExistingBinding(typeLiteral[Config].toKey) should not be null
+        }
 
-    injectTest("fooo", Seq(TestModule)) { implicit sys =>
-        val a: ActorRef = InjectActor[Actor]
-        val x: String = Inject[String]
-    }
-
-    injectTest("Config Test") { implicit sys =>
-        val cfg: Config = Inject[Config]
-        cfg should not be null
-    }
-}
-
-object ExtensionSpec {
-    object TestModule extends ScalaModule {
-        def configure(): Unit = {
-            bind[String].toInstance("foo")
+        injectTest("empty injector when no modules, with config (implicitly)") { implicit sys =>
+            val inj = InjectExt(sys).injector
+            inj.getExistingBinding(typeLiteral[Config].toKey) should not be null
         }
     }
 }

@@ -3,7 +3,9 @@ package wiii.inject
 import java.util.ServiceLoader
 
 import akka.actor.{ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider}
+import com.google.inject.util.Modules
 import com.google.inject.{Guice, Injector, Module}
+import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
 
 import scala.collection.JavaConversions._
@@ -39,14 +41,15 @@ object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider wit
             case v => throw new IllegalArgumentException(s"invalid $ModuleDiscoveryModeKey value, $v")
         }
 
-        val finalModules = new ConfigModule(config) :: modules
+        val finalModules = addCfgModule(config) :: modules
         val injector = Guice.createInjector(finalModules)
         new InjectExtImpl(injector)
     }
 
-    override def lookup = InjectExt
+    override def lookup() = InjectExt
 
     private def strToModule(fqcn: String): Module = {
+        // todo;; should handle this in scala form to support objects
         val o = Class.forName(fqcn).newInstance()
         if (o.isInstanceOf[Module]) o.asInstanceOf[Module]
         else throw new IllegalArgumentException(s"not a module, $fqcn")
@@ -68,11 +71,13 @@ trait InjectExtBuilder {
  * - CfgModuleDiscoveryKey: specifies the FQCN list of Modules when in 'config' mode
  *
  * - ManualModuleDiscovery: discovery mode that only uses Modules added through InjectExtBuilder
- * - CfgModuleDiscovery: discovery mode that includes modules specified in the CfgModuleDiscoveryKey
- * - SpiModuleDiscovery: discovery mode that includes modules specified through SPI
+ * - CfgModuleDiscovery: discovery mode that uses modules specified in the CfgModuleDiscoveryKey
+ * - SpiModuleDiscovery: discovery mode that uses modules specified through SPI
+ *
+ * - injectConfigurationKey: specify whether to provide the application Config through the injector
+ * - defaultInjectConfiguration: the default behavior of the injectConfigurationKey; which is true
  *
  * Notes:
- * - All modes will include manually added modules
  * - The default discovery mode is ManualModuleDiscovery
  */
 object InjectExtBuilder {
@@ -83,4 +88,13 @@ object InjectExtBuilder {
     val CfgModuleDiscovery = "config"
     val SpiModuleDiscovery = "spi"
     val DefaultModuleDiscoveryModeMode = ManualModuleDiscovery
+
+    val injectConfigurationKey = "akka.inject.cfg"
+
+    def addCfgModule(cfg: Config): Module = {
+        cfg.getAs[Boolean](injectConfigurationKey).getOrElse(true) match {
+            case true => new ConfigModule(cfg)
+            case false => Modules.EMPTY_MODULE
+        }
+    }
 }
