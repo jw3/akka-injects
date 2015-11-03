@@ -1,8 +1,12 @@
 package wiii.inject
 
-import akka.actor.{Actor, ActorContext, ActorRef, ActorSystem}
+import akka.actor._
 import com.google.inject.Injector
+import net.codingwell.scalaguice.KeyExtensions._
+import net.codingwell.scalaguice._
 import wiii.inject.Internals._
+
+import scala.util.Random
 
 
 /**
@@ -11,6 +15,9 @@ import wiii.inject.Internals._
  */
 trait InjectionBuilder[T] extends BaseBuilder[T, T] {
     this: BaseInjectionBuilder[T, T] =>
+
+
+    //\\ internals //\\
     protected type This = InjectionBuilder[T]
     protected def This() = this
 }
@@ -21,6 +28,10 @@ trait InjectionBuilder[T] extends BaseBuilder[T, T] {
  */
 trait ActorInjectionBuilder[T <: Actor] extends BaseBuilder[T, ActorRef] {
     this: BaseInjectionBuilder[T, ActorRef] =>
+
+    def named(name: String): This
+
+    //\\ internals //\\
     protected type This = ActorInjectionBuilder[T]
     protected def This() = this
 }
@@ -33,35 +44,77 @@ trait ActorInjectionBuilder[T <: Actor] extends BaseBuilder[T, ActorRef] {
 trait BaseBuilder[I, O] {
     protected type This
 
-    def ctor(args: Any*): This
+    def arguments(args: Any*): This
+    def annotated(name: String): This
+    def specified(key: String): This
+
     def build: O
+    def optional: Option[O]
 }
 
 //\\ internals //\\
 private[inject] object Internals {
     abstract class BaseInjectionBuilder[I, O] extends BaseBuilder[I, O] {
-        def ctor(args: Any*): This = {
+        var ctorArgs: Option[CtorArgs] = None
+        def arguments(args: Any*): This = {
             ctorArgs = Option(CtorArgs(args))
             This()
         }
 
-        private var ctorArgs: Option[CtorArgs] = None
+        var annotatedName: Option[AnnotatedName] = None
+        def annotated(name: String): This = {
+            annotatedName = (Option(AnnotatedName(name)))
+            This()
+        }
+
+        var specifiedWith: Option[SpecifiedWith] = None
+        def specified(key: String): This = {
+            specifiedWith = Option(SpecifiedWith(key))
+            This()
+        }
+
         protected def This(): This
     }
 
     class InjectionBuilderImpl[T](ip: InjectorProvider)
         extends BaseInjectionBuilder[T, T] with InjectionBuilder[T] {
 
-        lazy val injector: Injector = ip()
-        def build: T = ???
+        implicit lazy val injector: Injector = ip()
+
+        def build: T = optional.get
+        def optional: Option[T] = {
+            None
+        }
     }
 
-    class ActorInjectionBuilderImpl[T <: Actor](sys: ActorSystem, ctx: Option[ActorContext])
+    class ActorInjectionBuilderImpl[T <: Actor : Manifest](sys: ActorSystem, ctx: Option[ActorContext])
         extends BaseInjectionBuilder[T, ActorRef] with ActorInjectionBuilder[T] {
 
-        lazy val injector: Injector = InjectExt(sys).injector
-        def build: ActorRef = ???
+        require(sys != null, "actor system required")
+        implicit lazy val injector: Injector = InjectExt(sys).injector
+
+        var actorName: Option[ActorName] = None
+        def named(name: String): ActorInjectionBuilder[T] = {
+            actorName = Option(ActorName(name))
+            This()
+        }
+
+        def build: ActorRef = optional.get
+        def optional: Option[ActorRef] = {
+            provider[T].map(p =>
+                ctx.getOrElse(sys).actorOf(Props(p.get), actorName.map(_.name).getOrElse(randname))
+            )
+        }
     }
 
+    def randname: String = Random.alphanumeric.take(10).mkString
+
+    def provider[T: Manifest](implicit inj: Injector) =
+        Option(inj.getExistingBinding(typeLiteral[T].toKey)).map(_.getProvider)
+
+
     case class CtorArgs(args: Any*)
+    case class AnnotatedName(name: String)
+    case class SpecifiedWith(key: String)
+    case class ActorName(name: String)
 }
