@@ -22,7 +22,7 @@ class AnnotatedInjectionSpec extends InjectSpec with Matchers {
         }
 
         injectTest("inject when actor is annotated", Seq(AnnoBind)) { implicit sys =>
-            Inject [IBadActor].annotated(anno).build shouldBe a[ActorRef]
+            InjectActor [IBadActor].annotated(anno).build shouldBe a[ActorRef]
         }
 
         injectTest("throw when Int not annotated", Seq(AnnoBind)) { implicit sys =>
