@@ -2,11 +2,20 @@ Akka Injects
 ==========================
 [![Build Status](https://travis-ci.org/jw3/akka-injects.svg?branch=master)](https://travis-ci.org/jw3/akka-injects)
 
-Some DI for Akka using Guice
+Dependency Injection DSL for Akka, using Guice
 
 #### Goals:
 
-```val explicit = Inject[Something].build```
+- Inject to val
+- Annotation-less injections
+- Support traditional Guice patterns
+- Flexibility
+- Context sensitive Akka Actor injection
+- Concise, Intuitive DSL
+
+#### Examples:
+
+```val something = Inject[Something].build```
 
 ```val foo: ActorRef = InjectActor[IMyActor]```
 
@@ -22,18 +31,15 @@ Some DI for Akka using Guice
 
 ```val composed: Option[Bing] = Inject[Bing] annotated "the.prop.path" arguments("name", 1001) optional```
 
-- ```annotated``` uses the @Named annotation
-- ```specified``` uses the path to find a fqcn in the app config
-- ```arguments``` are ctor args for the bound implementation
+- ```annotated``` with a name (ie. @Named)
+- ```specified``` at path in config use fqcn to create instance
+- ```arguments``` passed to ctor of the bound type
 - if the lhs type is specified the builder can be build implicitly
 - use ```InjectActor``` to inject Akka Actors, use ```Inject``` for everything else
+- the use of specified will override any binding that may exist in a module
+- SPI is provided by registering Modules as services
+- Use lazy to break cycles
+- Actor injection is for new instances only
 
 - Todo: Config key support, ie ```specified```, is not implemented yet
 - Todo: Using ```Manifest``` for now as ScalaGuice is still bound to them
-
-### Common Errors
-
-1) Injecting an Actor with ```Inject``` rather than ```InjectActor```.
-
-
-    Error injecting constructor, akka.actor.ActorInitializationException: You cannot create an instance of [...] explicitly using the constructor (new). You have to use one of the 'actorOf' factory methods to create a new actor.

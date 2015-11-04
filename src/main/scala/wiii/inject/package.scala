@@ -1,9 +1,11 @@
 package wiii
 
 import akka.actor.{Actor, ActorContext, ActorRef, ActorSystem}
-import com.google.inject.Injector
+import com.google.inject.{Injector, Key}
 import com.typesafe.config.Config
 import net.codingwell.scalaguice.ScalaModule
+
+import scala.reflect.runtime.universe._
 
 
 /**
@@ -20,7 +22,8 @@ package object inject {
      * @return InjectionBuilder
      */
     def Inject[T: Manifest](implicit ip: InjectorProvider): InjectionBuilder[T] = {
-        require(ip != null, "injection provider required")
+        requireType[T](not[Actor])
+        requireNonNull(ip, "injection provider required")
         new InjectionBuilderImpl[T](ip)
     }
 
@@ -31,7 +34,7 @@ package object inject {
      * @return ActorInjectionBuilder
      */
     def InjectActor[T <: Actor : Manifest](implicit sys: ActorSystem, ctx: ActorContext = null): ActorInjectionBuilder[T] = {
-        require(sys != null, "actor system required")
+        requireNonNull(sys, "actor system required")
         new ActorInjectionBuilderImpl[T](sys, Option(ctx))
     }
 
@@ -47,5 +50,17 @@ package object inject {
     implicit def actorBuilder2actorRef[T <: Actor](builder: ActorInjectionBuilder[T]): ActorRef = builder.build
     implicit def actorSystem2injectorProvider(implicit sys: ActorSystem): InjectorProvider = () => InjectExt(sys).injector
     implicit def actorContext2actorSystem(implicit ctx: ActorContext): ActorSystem = ctx.system
+
+    implicit class MoreInjectorExtensions(i: Injector) {
+        def existingBinding[T: Manifest](key: Key[T]) = Option(i.getExistingBinding(key))
+    }
+
+    //\\ internals //\\
+    private def requireNonNull(o: Any, msg: => Any): Unit = require(o != null, msg)
+    private def requireType[T: Manifest](fn: Type => Boolean) = {
+        if (!fn(typeOf[T])) throw new UnsupportedOperationException(s"${typeOf[T]} cannot be created via this injection call")
+    }
+    private def is[Rhs: Manifest](lhs: Type) = lhs <:< typeOf[Rhs]
+    private def not[Rhs: Manifest](lhs: Type) = !is[Rhs](lhs)
 }
 

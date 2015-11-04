@@ -18,10 +18,8 @@ import scala.util.Random
 trait InjectionBuilder[T] extends BaseBuilder[T, T] {
     this: BaseInjectionBuilder[T, T] =>
 
-
     //\\ internals //\\
-    protected type This = InjectionBuilder[T]
-    protected def This() = this
+    protected type Builder = InjectionBuilder[T]
 }
 
 /**
@@ -31,11 +29,10 @@ trait InjectionBuilder[T] extends BaseBuilder[T, T] {
 trait ActorInjectionBuilder[T <: Actor] extends BaseBuilder[T, ActorRef] {
     this: BaseInjectionBuilder[T, ActorRef] =>
 
-    def named(name: String): This
+    def named(name: String): Builder
 
     //\\ internals //\\
-    protected type This = ActorInjectionBuilder[T]
-    protected def This() = this
+    protected type Builder = ActorInjectionBuilder[T]
 }
 
 /**
@@ -44,38 +41,41 @@ trait ActorInjectionBuilder[T <: Actor] extends BaseBuilder[T, ActorRef] {
  * @tparam O Expected Type ('O'utput)
  */
 trait BaseBuilder[I, O] {
-    protected type This
+    protected type Builder
 
-    def arguments(args: Any*): This
-    def annotated(name: String): This
-    def specified(key: String): This
+    def arguments(args: Any*): Builder
+    def annotated(name: String): Builder
+    def specified(key: String): Builder
 
     def build: O
     def optional: Option[O]
+
+    //\\ internals //\\
+    protected def ThisBuilder(): Builder
 }
 
 //\\ internals //\\
 private[inject] object Internals {
     abstract class BaseInjectionBuilder[I, O] extends BaseBuilder[I, O] {
         var ctorArgs: Option[CtorArgs] = None
-        def arguments(args: Any*): This = {
+        def arguments(args: Any*): Builder = {
             ctorArgs = Option(CtorArgs(args))
-            This()
+            ThisBuilder()
         }
 
         var annotatedName: Option[AnnotatedName] = None
-        def annotated(name: String): This = {
+        def annotated(name: String): Builder = {
             annotatedName = Option(AnnotatedName(name))
-            This()
+            ThisBuilder()
         }
 
         var specifiedWith: Option[SpecifiedWith] = None
-        def specified(key: String): This = {
+        def specified(key: String): Builder = {
             specifiedWith = Option(SpecifiedWith(key))
-            This()
+            ThisBuilder()
         }
 
-        protected def This(): This
+        protected def ThisBuilder(): Builder = this.asInstanceOf[Builder]
     }
 
     class InjectionBuilderImpl[T: Manifest](ip: InjectorProvider)
@@ -83,7 +83,7 @@ private[inject] object Internals {
 
         implicit lazy val injector: Injector = ip()
 
-        def build: T = optional.get
+        def build: T = checkopt(optional)
         def optional: Option[T] = provider[T](annotatedName.map(_.name)).map(_.get())
     }
 
@@ -95,15 +95,22 @@ private[inject] object Internals {
         var actorName: Option[ActorName] = None
         def named(name: String): ActorInjectionBuilder[T] = {
             actorName = Option(ActorName(name))
-            This()
+            ThisBuilder()
         }
 
-        def build: ActorRef = optional.get
+        def build: ActorRef = checkopt(optional)
         def optional: Option[ActorRef] = {
             provider[T](annotatedName.map(_.name)).map(p =>
                 ctx.getOrElse(sys).actorOf(Props(p.get), actorName.map(_.name).getOrElse(randname))
             )
         }
+    }
+
+    @throws[IllegalStateException]("If injection of [T] is not available")
+    def checkopt[T: Manifest](opt: Option[T]): T = {
+        if (!opt.isDefined)
+            throw new IllegalStateException(s"Injection of [${manifest[T].runtimeClass.getName}}] is not available")
+        opt.get
     }
 
     def randname: String = Random.alphanumeric.take(10).mkString
@@ -113,12 +120,11 @@ private[inject] object Internals {
     }
 
     def prov[T: Manifest](keyFn: TypeLiteral[T] => Key[T])(implicit inj: Injector): Option[Provider[T]] = {
-        Option(inj.getExistingBinding(keyFn(typeLiteral[T]))).map(_.getProvider)
+        inj.existingBinding(keyFn(typeLiteral[T])).map(_.getProvider)
     }
 
     def stdKey[T: Manifest](tlit: TypeLiteral[T]) = tlit.toKey
     def annoKey[T: Manifest](anno: String)(tlit: TypeLiteral[T]) = tlit.annotatedWithName(anno)
-
 
     case class CtorArgs(args: Any*)
     case class AnnotatedName(name: String)
