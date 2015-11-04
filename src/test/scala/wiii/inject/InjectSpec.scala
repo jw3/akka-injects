@@ -2,7 +2,7 @@ package wiii.inject
 
 import akka.actor.ActorSystem
 import com.google.inject.{Injector, Module}
-import com.typesafe.config.{ConfigValueFactory, Config, ConfigFactory}
+import com.typesafe.config.{Config, ConfigFactory, ConfigValueFactory}
 import org.scalatest.WordSpecLike
 import wiii.inject.InjectExtBuilder._
 
@@ -44,4 +44,5 @@ trait InjectSpec extends WordSpecLike {
 
     //\\ implicits //\\
     implicit def cfg2Opt(cfg: Config): Option[Config] = Option(cfg)
+    implicit def mod2Seq(mod: Module): Seq[Module] = Seq(mod)
 }

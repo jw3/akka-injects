@@ -13,7 +13,7 @@ import net.codingwell.scalaguice.ScalaModule
  * val baz: IBaz = Inject[IBaz]
  * val ctord: Bing = Inject[Bing] withArgs("name", 1001)
  * val actor: ActorRef = InjectActor[IMyActor] named "bob" specifiedAt "path.from.cfg"
- * val somthing: Option[Something] = Inject[Something] asOptional
+ * val somthing: Option[Something] = Inject[Something] optional
  *
  * val composed: Bing = Inject[Bing] annotated "the.prop.path" withArgs("name", 1001) asOptional
  *

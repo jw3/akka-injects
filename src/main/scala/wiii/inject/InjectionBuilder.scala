@@ -63,7 +63,7 @@ private[inject] object Internals {
 
         var annotatedName: Option[AnnotatedName] = None
         def annotated(name: String): This = {
-            annotatedName = (Option(AnnotatedName(name)))
+            annotatedName = Option(AnnotatedName(name))
             This()
         }
 
@@ -76,15 +76,13 @@ private[inject] object Internals {
         protected def This(): This
     }
 
-    class InjectionBuilderImpl[T](ip: InjectorProvider)
+    class InjectionBuilderImpl[T: Manifest](ip: InjectorProvider)
         extends BaseInjectionBuilder[T, T] with InjectionBuilder[T] {
 
         implicit lazy val injector: Injector = ip()
 
         def build: T = optional.get
-        def optional: Option[T] = {
-            None
-        }
+        def optional: Option[T] = provider[T].map(_.get())
     }
 
     class ActorInjectionBuilderImpl[T <: Actor : Manifest](sys: ActorSystem, ctx: Option[ActorContext])
