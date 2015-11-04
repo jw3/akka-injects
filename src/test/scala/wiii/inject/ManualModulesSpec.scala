@@ -6,6 +6,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 import wiii.inject.ManualModulesSpec.{IntM, StringM}
+import wiii.inject.test.InjectSpec
 
 import scala.util.Random
 

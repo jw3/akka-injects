@@ -3,6 +3,7 @@ package wiii.inject
 import akka.actor.{Actor, ActorRef}
 import net.codingwell.scalaguice._
 import org.scalatest.Matchers
+import wiii.inject.test.InjectSpec
 
 
 class InjectActorSpec extends InjectSpec with Matchers {

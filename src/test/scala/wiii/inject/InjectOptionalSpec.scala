@@ -4,6 +4,7 @@ import akka.actor.Actor
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 import wiii.inject.InjectOptionalSpec.{BindsStuff, IDoExist, IDontExist}
+import wiii.inject.test.InjectSpec
 
 /**
  * validate the ability to do injections optionally

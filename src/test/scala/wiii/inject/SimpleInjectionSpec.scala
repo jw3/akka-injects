@@ -6,6 +6,7 @@ import akka.actor.Actor
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 import wiii.inject.SimpleInjectectionSpec._
+import wiii.inject.test.InjectSpec
 
 import scala.util.Random
 

@@ -1,9 +1,10 @@
-package wiii.inject
+package wiii.inject.test
 
 import akka.actor.ActorSystem
 import com.google.inject.{Injector, Module}
 import com.typesafe.config.{Config, ConfigFactory, ConfigValueFactory}
 import org.scalatest.WordSpecLike
+import wiii.inject.InjectExt
 import wiii.inject.InjectExtBuilder._
 
 import scala.collection.JavaConversions._
