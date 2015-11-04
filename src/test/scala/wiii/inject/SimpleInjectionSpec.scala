@@ -15,7 +15,7 @@ import scala.util.Random
  */
 class SimpleInjectionSpec extends InjectSpec with Matchers {
 
-    "optional injection" should {
+    "simple injection" should {
         injectTest("throw if trying to inject actor, regardless of binding presence") { implicit sys =>
             intercept[Exception] {Inject[Actor].build}
         }
@@ -36,11 +36,11 @@ class SimpleInjectionSpec extends InjectSpec with Matchers {
             Inject[Int].build shouldBe intVal
         }
 
-        injectTest("inject Some for String when bindings are present", Seq(SimpleBindings)) { implicit sys =>
+        injectTest("inject String when bindings are present", Seq(SimpleBindings)) { implicit sys =>
             Inject[String].build shouldBe stringVal
         }
 
-        injectTest("inject Some for trait when bindings are present", Seq(SimpleBindings)) { implicit sys =>
+        injectTest("inject trait when bindings are present", Seq(SimpleBindings)) { implicit sys =>
             Inject[IDoExist].build shouldBe DoesExists
         }
     }

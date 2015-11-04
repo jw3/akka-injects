@@ -8,6 +8,8 @@ import wiii.inject.InjectExt
 import wiii.inject.InjectExtBuilder._
 
 import scala.collection.JavaConversions._
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 /**
  * utility for wrapping up guice based actor system tests
@@ -23,7 +25,7 @@ trait InjectSpec extends WordSpecLike {
             InjectExt.addModules(mods: _*)
             val sys = ActorSystem(s"${name.replaceAll( """\W""", "_")}", cfg)
             try test(sys)
-            finally {sys.terminate().value}
+            finally {Await.ready(sys.terminate(), Duration.create("10s"))}
         }
     }
 
