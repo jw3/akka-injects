@@ -7,28 +7,33 @@ import net.codingwell.scalaguice.ScalaModule
 
 
 /**
- * goals:
- * val foo: ActorRef = InjectActor[IMyActor]
- * val bar: String = Inject[String] annotated "the.prop.path"
- * val baz: IBaz = Inject[IBaz]
- * val ctord: Bing = Inject[Bing] withArgs("name", 1001)
- * val actor: ActorRef = InjectActor[IMyActor] named "bob" specifiedAt "path.from.cfg"
- * val somthing: Option[Something] = Inject[Something] optional
- *
- * val composed: Bing = Inject[Bing] annotated "the.prop.path" withArgs("name", 1001) asOptional
- *
- * Note:
- * - 'named' and 'keyed' are mutually exclusive
- *
- * Using Manifest for now as ScalaGuice is still bound to them
+ * the inject API
  */
 package object inject {
     import wiii.inject.Internals._
 
     type InjectorProvider = () => Injector
 
-    def Inject[T: Manifest](implicit ip: InjectorProvider) = new InjectionBuilderImpl[T](ip)
-    def InjectActor[T <: Actor: Manifest](implicit sys: ActorSystem, ctx: ActorContext = null) = new ActorInjectionBuilderImpl[T](sys, Option(ctx))
+    /**
+     * entry point to the Inject of non-actors
+     * @param ip Function providing an [[Injector]]
+     * @return InjectionBuilder
+     */
+    def Inject[T: Manifest](implicit ip: InjectorProvider): InjectionBuilder[T] = {
+        require(ip != null, "injection provider required")
+        new InjectionBuilderImpl[T](ip)
+    }
+
+    /**
+     * entry point to the Inject of actors
+     * @param sys the ActorSystem (required)
+     * @param ctx an ActorContext (optional)
+     * @return ActorInjectionBuilder
+     */
+    def InjectActor[T <: Actor : Manifest](implicit sys: ActorSystem, ctx: ActorContext = null): ActorInjectionBuilder[T] = {
+        require(sys != null, "actor system required")
+        new ActorInjectionBuilderImpl[T](sys, Option(ctx))
+    }
 
     /**
      * [[com.google.inject.Module]] that provides the application [[Config]]

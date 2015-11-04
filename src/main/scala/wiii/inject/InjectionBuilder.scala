@@ -88,7 +88,6 @@ private[inject] object Internals {
     class ActorInjectionBuilderImpl[T <: Actor : Manifest](sys: ActorSystem, ctx: Option[ActorContext])
         extends BaseInjectionBuilder[T, ActorRef] with ActorInjectionBuilder[T] {
 
-        require(sys != null, "actor system required")
         implicit lazy val injector: Injector = InjectExt(sys).injector
 
         var actorName: Option[ActorName] = None
