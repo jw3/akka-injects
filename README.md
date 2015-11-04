@@ -29,7 +29,7 @@ Dependency Injection DSL for Akka, using Guice
 
 ```val somthing: Option[Something] = Inject[Something] optional```
 
-```val composed: Option[Bing] = Inject[Bing] annotated "the.prop.path" arguments("name", 1001) optional```
+#### Notes:
 
 - ```annotated``` with a name (ie. @Named)
 - ```specified``` at path in config use fqcn to create instance
@@ -41,5 +41,7 @@ Dependency Injection DSL for Akka, using Guice
 - Use lazy to break cycles
 - Actor injection is for new instances only
 
-- Todo: Config key support, ie ```specified```, is not implemented yet
-- Todo: Using ```Manifest``` for now as ScalaGuice is still bound to them
+#### Todos
+
+- Config key support, ie ```specified```, is not implemented yet
+- Using ```Manifest``` for now as ScalaGuice is still bound to them
