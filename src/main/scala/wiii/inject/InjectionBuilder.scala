@@ -1,7 +1,9 @@
 package wiii.inject
 
+import javax.inject.Provider
+
 import akka.actor._
-import com.google.inject.Injector
+import com.google.inject.{Injector, Key, TypeLiteral}
 import net.codingwell.scalaguice.KeyExtensions._
 import net.codingwell.scalaguice._
 import wiii.inject.Internals._
@@ -82,7 +84,7 @@ private[inject] object Internals {
         implicit lazy val injector: Injector = ip()
 
         def build: T = optional.get
-        def optional: Option[T] = provider[T].map(_.get())
+        def optional: Option[T] = provider[T](annotatedName.map(_.name)).map(_.get())
     }
 
     class ActorInjectionBuilderImpl[T <: Actor : Manifest](sys: ActorSystem, ctx: Option[ActorContext])
@@ -98,7 +100,7 @@ private[inject] object Internals {
 
         def build: ActorRef = optional.get
         def optional: Option[ActorRef] = {
-            provider[T].map(p =>
+            provider[T](annotatedName.map(_.name)).map(p =>
                 ctx.getOrElse(sys).actorOf(Props(p.get), actorName.map(_.name).getOrElse(randname))
             )
         }
@@ -106,8 +108,16 @@ private[inject] object Internals {
 
     def randname: String = Random.alphanumeric.take(10).mkString
 
-    def provider[T: Manifest](implicit inj: Injector) =
-        Option(inj.getExistingBinding(typeLiteral[T].toKey)).map(_.getProvider)
+    def provider[T: Manifest](annotated: Option[String] = None)(implicit inj: Injector): Option[Provider[T]] = {
+        annotated.flatMap(a => prov(annoKey[T](a))).orElse(prov(stdKey[T]))
+    }
+
+    def prov[T: Manifest](keyFn: TypeLiteral[T] => Key[T])(implicit inj: Injector): Option[Provider[T]] = {
+        Option(inj.getExistingBinding(keyFn(typeLiteral[T]))).map(_.getProvider)
+    }
+
+    def stdKey[T: Manifest](tlit: TypeLiteral[T]) = tlit.toKey
+    def annoKey[T: Manifest](anno: String)(tlit: TypeLiteral[T]) = tlit.annotatedWithName(anno)
 
 
     case class CtorArgs(args: Any*)

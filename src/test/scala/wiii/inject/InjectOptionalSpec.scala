@@ -4,7 +4,7 @@ import akka.actor.Actor
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 import wiii.inject.InjectOptionalSpec.{BindsStuff, IDoExist, IDontExist}
-import wiii.inject.test.InjectSpec
+import wiii.inject.test.{InjectSpec, NopActor}
 
 /**
  * validate the ability to do injections optionally
@@ -42,6 +42,7 @@ object InjectOptionalSpec {
     trait IDontExist
     trait IDoExist
     class DoesExists extends IDoExist
+    class AnActor extends NopActor
 
     object BindsStuff extends ScalaModule {
         def configure(): Unit = {
@@ -49,12 +50,6 @@ object InjectOptionalSpec {
             bind[String].toInstance("somestring")
             bind[Int].toInstance(9999)
             bind[Actor].to[AnActor]
-        }
-    }
-
-    class AnActor extends Actor {
-        def receive: Receive = {
-            case _ =>
         }
     }
 }

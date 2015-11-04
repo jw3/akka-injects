@@ -3,7 +3,7 @@ package wiii.inject
 import akka.actor.{Actor, ActorRef}
 import net.codingwell.scalaguice._
 import org.scalatest.Matchers
-import wiii.inject.test.InjectSpec
+import wiii.inject.test.{NopActor, InjectSpec}
 
 
 class InjectActorSpec extends InjectSpec with Matchers {
@@ -18,16 +18,11 @@ class InjectActorSpec extends InjectSpec with Matchers {
 
 }
 
-trait IAnActor extends Actor
-
 object InjectActorSpec {
+    trait IAnActor extends NopActor
+    class AnActor extends IAnActor
+
     object SimpleModule extends ScalaModule {
         def configure(): Unit = bind[IAnActor].to[AnActor]
-    }
-
-    class AnActor extends IAnActor {
-        def receive: Receive = {
-            case _ =>
-        }
     }
 }

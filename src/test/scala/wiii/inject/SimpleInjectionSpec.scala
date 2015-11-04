@@ -10,9 +10,7 @@ import wiii.inject.test.InjectSpec
 
 import scala.util.Random
 
-/**
- * @author wassj
- */
+
 class SimpleInjectionSpec extends InjectSpec with Matchers {
 
     "simple injection" should {
