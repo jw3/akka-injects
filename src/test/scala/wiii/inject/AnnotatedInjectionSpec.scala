@@ -17,27 +17,27 @@ import scala.util.Random
 class AnnotatedInjectionSpec extends InjectSpec with Matchers {
 
     "annotated injection" should {
-        injectTest("throw when actor not annotated", Seq(AnnoBind)) { implicit sys =>
+        injectTest("throw when actor not annotated", AnnoBind) { implicit sys =>
             intercept[Exception] {InjectActor[IBadActor].build}
         }
 
-        injectTest("inject when actor is annotated", Seq(AnnoBind)) { implicit sys =>
-            InjectActor [IBadActor].annotated(anno).build shouldBe a[ActorRef]
+        injectTest("inject when actor is annotated", AnnoBind) { implicit sys =>
+            InjectActor[IBadActor].annotated(anno).build shouldBe a[ActorRef]
         }
 
-        injectTest("throw when Int not annotated", Seq(AnnoBind)) { implicit sys =>
+        injectTest("throw when Int not annotated", AnnoBind) { implicit sys =>
             intercept[Exception] {Inject[Int].build}
         }
 
-        injectTest("inject when Int is annotated", Seq(AnnoBind)) { implicit sys =>
+        injectTest("inject when Int is annotated", AnnoBind) { implicit sys =>
             Inject[Int].annotated(anno).build shouldBe intVal
         }
 
-        injectTest("throw when String not annotated", Seq(AnnoBind)) { implicit sys =>
+        injectTest("throw when String not annotated", AnnoBind) { implicit sys =>
             intercept[Exception] {Inject[String].build}
         }
 
-        injectTest("inject when String is annotated", Seq(AnnoBind)) { implicit sys =>
+        injectTest("inject when String is annotated", AnnoBind) { implicit sys =>
             Inject[String].annotated(anno).build shouldBe stringVal
         }
     }

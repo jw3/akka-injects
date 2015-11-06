@@ -1,16 +1,16 @@
 package wiii.inject
 
-import akka.actor.{Actor, ActorRef}
+import akka.actor.ActorRef
 import net.codingwell.scalaguice._
 import org.scalatest.Matchers
-import wiii.inject.test.{NopActor, InjectSpec}
+import wiii.inject.test.{InjectSpec, NopActor}
 
 
 class InjectActorSpec extends InjectSpec with Matchers {
     import InjectActorSpec._
 
     "actor injection" should {
-        injectTest("should work with traits", Seq(SimpleModule)) { implicit sys =>
+        injectTest("should work with traits", SimpleModule) { implicit sys =>
             val aa: ActorRef = InjectActor[IAnActor]
             aa should not be null
         }

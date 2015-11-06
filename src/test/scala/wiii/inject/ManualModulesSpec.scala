@@ -12,10 +12,10 @@ import scala.util.Random
 
 class ManualModulesSpec extends InjectSpec with Matchers {
     "single injections" should {
-        injectTest("provide String", Seq(StringM)) { implicit sys =>
+        injectTest("provide String", StringM) { implicit sys =>
             injector.instance[String] shouldBe StringM.value
         }
-        injectTest("provide Int", Seq(IntM)) { implicit sys =>
+        injectTest("provide Int", IntM) { implicit sys =>
             injector.instance[Int] shouldBe IntM.value
         }
     }
