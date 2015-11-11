@@ -6,12 +6,12 @@ Dependency Injection DSL for Akka, using Guice
 
 #### Goals:
 
-- Inject to val
-- Annotation-less injections
-- Support traditional Guice patterns
-- Flexibility
-- Context sensitive Akka Actor injection
-- Concise, Intuitive DSL
+- Concise DSL
+- Inject to ```val```
+- No annotations
+- Elegant optionals
+- Akka Actor injection that is parent aware
+- Full support for traditional Guice patterns
 
 #### Examples:
 
@@ -19,9 +19,13 @@ Dependency Injection DSL for Akka, using Guice
 
 ```val foo: ActorRef = InjectActor[IMyActor]```
 
+```val foo: Option[ActorRef] = InjectActor[IMyActor]```
+
 ```val bar: String = Inject[String] annotated "the.prop.path"```
 
 ```val baz: IBaz = Inject[IBaz]```
+
+```val baz: Option[IBaz] = Inject[IBaz]```
 
 ```val ctord: Bing = Inject[Bing] arguments("name", 1001)```
 

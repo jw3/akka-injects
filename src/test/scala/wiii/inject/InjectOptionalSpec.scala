@@ -1,6 +1,6 @@
 package wiii.inject
 
-import akka.actor.Actor
+import akka.actor.{Actor, ActorRef}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 import wiii.inject.InjectOptionalSpec.{BindsStuff, IDoExist, IDontExist}
@@ -34,6 +34,38 @@ class InjectOptionalSpec extends InjectSpec with Matchers {
 
         injectTest("inject Some for trait when no bindings are present", Seq(BindsStuff)) { implicit sys =>
             Inject[IDoExist].optional shouldBe defined
+        }
+    }
+
+    "optional injection should work implicitly" should {
+        injectTest("inject none for actors when no bindings are present") { implicit sys =>
+            val opt: Option[ActorRef] = InjectActor[Actor]
+            opt should not be defined
+        }
+
+        injectTest("inject none for boxed when no bindings are present") { implicit sys =>
+            val opt: Option[Int] = Inject[Int]
+            opt should not be defined
+        }
+
+        injectTest("inject none for trait when no bindings are present") { implicit sys =>
+            val opt: Option[IDontExist] = Inject[IDontExist]
+            opt should not be defined
+        }
+
+        injectTest("inject Some for actors when no bindings are present", Seq(BindsStuff)) { implicit sys =>
+            val opt: Option[ActorRef] = InjectActor[Actor]
+            opt shouldBe defined
+        }
+
+        injectTest("inject Some for boxed when no bindings are present", Seq(BindsStuff)) { implicit sys =>
+            val opt: Option[Int] = Inject[Int]
+            opt shouldBe defined
+        }
+
+        injectTest("inject Some for trait when no bindings are present", Seq(BindsStuff)) { implicit sys =>
+            val opt: Option[IDoExist] = Inject[IDoExist]
+            opt shouldBe defined
         }
     }
 }
