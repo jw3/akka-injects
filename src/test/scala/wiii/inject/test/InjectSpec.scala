@@ -42,6 +42,7 @@ trait InjectSpec extends WordSpecLike {
     def injCfg(f: Boolean) = injectConfigurationKey -> Boolean.box(f)
     def modMode(key: String) = ModuleDiscoveryModeKey -> key
     def cfgMode = modMode(CfgModuleDiscovery)
+    def spiMode = modMode(SpiModuleDiscovery)
     def modCfg(mfqcn: String*) = CfgModuleDiscoveryKey -> ConfigValueFactory.fromIterable(mfqcn)
 
 
