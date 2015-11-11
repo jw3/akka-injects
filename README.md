@@ -15,23 +15,65 @@ Dependency Injection DSL for Akka, using Guice
 
 #### Examples:
 
-```val something = Inject[Something].build```
+```scala
+val something = Inject[Something] build
+```
 
-```val foo: ActorRef = InjectActor[IMyActor]```
+```scala
+val something: Something = Inject[Something]
+```
 
-```val foo: Option[ActorRef] = InjectActor[IMyActor]```
+```scala
+val somthingOptional = Inject[Something] optional
+```
 
-```val bar: String = Inject[String] annotated "the.prop.path"```
+```scala
+val somthingOptional: Option[Something] = Inject[Something]
+```
 
-```val baz: IBaz = Inject[IBaz]```
+```scala
+val actor = InjectActor[IMyActor] build
+```
 
-```val baz: Option[IBaz] = Inject[IBaz]```
+```scala
+val actor: ActorRef = InjectActor[IMyActor]
+```
 
-```val ctord: Bing = Inject[Bing] arguments("name", 1001)```
+```scala
+val actor = InjectActor[IMyActor] optional
+```
 
-```val actor: ActorRef = InjectActor[IMyActor] named "bob" specified "path.from.cfg"```
+```scala
+val actor: Option[ActorRef] = InjectActor[IMyActor]
+```
 
-```val somthing: Option[Something] = Inject[Something] optional```
+```scala
+val namedString: String = Inject[String] annotated "namedThis"
+```
+
+```scala
+val obj: IBar = Inject[IBar]
+```
+
+```scala
+val optionalObj: Option[IBar] = Inject[IBaz]
+```
+
+```scala
+val withArgsCtor: Baz = Inject[Baz] arguments("name", 1001)
+```
+
+```scala
+val bob: Option[ActorRef] = InjectActor[IMyActor] named "bob"
+```
+
+```scala
+val fromConfig: Option[ActorRef] = InjectActor[Actor] specified "path.from.cfg"
+```
+
+```scala
+val cfg: Config = Inject[Config]
+```
 
 #### Notes:
 
@@ -44,6 +86,7 @@ Dependency Injection DSL for Akka, using Guice
 - SPI is provided by registering Modules as services
 - Use lazy to break cycles
 - Actor injection is for new instances only
+- the application config is available by default through the Config binding
 
 #### Todos
 
