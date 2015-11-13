@@ -68,7 +68,7 @@ val bob: Option[ActorRef] = InjectActor[IMyActor] named "bob"
 ```
 
 ```scala
-val fromConfig: Option[ActorRef] = InjectActor[Actor] specified "path.from.cfg"
+val configed: Option[ActorRef] = InjectActor[Actor] fromConfig "path.from.cfg"
 ```
 
 ```scala
@@ -78,11 +78,11 @@ val cfg: Config = Inject[Config]
 #### Notes:
 
 - ```annotated``` with a name (ie. @Named)
-- ```specified``` at path in config use fqcn to create instance
-- ```arguments``` passed to ctor of the bound type
+- ```fromConfig``` use value of path for AnyVal or fqcn to create instance
+- ```args``` passed to ctor of the bound type
 - if the lhs type is specified the builder can be build implicitly
 - use ```InjectActor``` to inject Akka Actors, use ```Inject``` for everything else
-- the use of specified will override any binding that may exist in a module
+- ```fromConfig``` will override module bindings, and will fallback on them if needed
 - SPI is provided by registering Modules as services
 - Use lazy to break cycles
 - Actor injection is for new instances only
@@ -90,5 +90,5 @@ val cfg: Config = Inject[Config]
 
 #### Todos
 
-- Config key support, ie ```specified```, is not implemented yet
+- Config key support, ie ```fromConfig```, is not implemented yet
 - Using ```Manifest``` for now as ScalaGuice is still bound to them

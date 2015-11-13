@@ -43,9 +43,9 @@ trait ActorInjectionBuilder[T <: Actor] extends BaseBuilder[T, ActorRef] {
 trait BaseBuilder[I, O] {
     protected type Builder
 
-    def arguments(args: Any*): Builder
+    def args(args: Any*): Builder
     def annotated(name: String): Builder
-    def specified(key: String): Builder
+    def fromConfig(key: String): Builder
 
     def build: O
     def optional: Option[O]
@@ -58,7 +58,7 @@ trait BaseBuilder[I, O] {
 private[inject] object Internals {
     abstract class BaseInjectionBuilder[I, O] extends BaseBuilder[I, O] {
         var ctorArgs: Option[CtorArgs] = None
-        def arguments(args: Any*): Builder = {
+        def args(args: Any*): Builder = {
             ctorArgs = Option(CtorArgs(args))
             ThisBuilder()
         }
@@ -70,7 +70,7 @@ private[inject] object Internals {
         }
 
         var specifiedWith: Option[SpecifiedWith] = None
-        def specified(key: String): Builder = {
+        def fromConfig(key: String): Builder = {
             specifiedWith = Option(SpecifiedWith(key))
             ThisBuilder()
         }
