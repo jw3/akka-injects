@@ -1,4 +1,4 @@
-organization := "wiii"
+organization := "com.rxthings"
 name := "akka-injects"
 version := "0.2-SNAPSHOT"
 licenses +=("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
