@@ -108,10 +108,9 @@ private[inject] object Internals {
     }
 
     @throws[IllegalStateException]("If injection of [T] is not available")
-    def checkopt[T: Manifest](opt: Option[T]): T = {
-        if (!opt.isDefined)
-            throw new IllegalStateException(s"Injection of [${manifest[T].runtimeClass.getName}}] is not available")
-        opt.get
+    def checkopt[T: Manifest](opt: Option[T]): T = opt match {
+        case Some(t) => t
+        case None => throw new IllegalStateException(s"Injection of [${manifest[T].runtimeClass.getName}}] is not available")
     }
 
     def randname: String = Random.alphanumeric.take(10).mkString
