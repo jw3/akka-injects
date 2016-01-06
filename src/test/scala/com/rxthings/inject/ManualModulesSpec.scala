@@ -1,12 +1,12 @@
-package wiii.inject
+package com.rxthings.inject
 
 import java.util.UUID
 
+import com.rxthings.inject.ManualModulesSpec.{IntM, StringM}
+import com.rxthings.inject.test.InjectSpec
 import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
-import wiii.inject.ManualModulesSpec.{IntM, StringM}
-import wiii.inject.test.InjectSpec
 
 import scala.util.Random
 

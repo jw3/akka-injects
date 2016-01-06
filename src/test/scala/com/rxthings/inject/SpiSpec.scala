@@ -1,8 +1,8 @@
-package wiii.inject
+package com.rxthings.inject
 
+import com.rxthings.inject.test.{InjectSpec, SpiTests}
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.scalatest.Matchers
-import wiii.inject.test.{InjectSpec, SpiTests}
 
 class SpiSpec extends InjectSpec with Matchers {
 

@@ -24,7 +24,7 @@ If you want to load the extension at ```ActorSystem``` creation time you can [Lo
 
 ```HOCON
 akka {
-  extensions = ["wiii.inject.InjectExt"]
+  extensions = ["com.rxthings.inject.InjectExt"]
 }
 ```
 

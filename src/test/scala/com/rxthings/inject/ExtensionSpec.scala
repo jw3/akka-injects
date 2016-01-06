@@ -1,10 +1,10 @@
-package wiii.inject
+package com.rxthings.inject
 
+import com.rxthings.inject.test.InjectSpec
 import com.typesafe.config.Config
 import net.codingwell.scalaguice.KeyExtensions._
 import net.codingwell.scalaguice._
 import org.scalatest.Matchers
-import wiii.inject.test.InjectSpec
 
 /**
  * test various aspects of the [[InjectExt]] Akka Extension

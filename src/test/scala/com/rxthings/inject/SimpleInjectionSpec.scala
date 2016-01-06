@@ -1,12 +1,12 @@
-package wiii.inject
+package com.rxthings.inject
 
 import java.util.UUID
 
 import akka.actor.Actor
+import com.rxthings.inject.SimpleInjectectionSpec._
+import com.rxthings.inject.test.InjectSpec
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
-import wiii.inject.SimpleInjectectionSpec._
-import wiii.inject.test.InjectSpec
 
 import scala.util.Random
 

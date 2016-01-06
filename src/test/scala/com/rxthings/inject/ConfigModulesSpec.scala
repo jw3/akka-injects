@@ -1,11 +1,11 @@
-package wiii.inject
+package com.rxthings.inject
 
 import java.util.UUID
 
+import com.rxthings.inject.test.InjectSpec
 import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
-import wiii.inject.test.InjectSpec
 
 import scala.util.Random
 
@@ -29,20 +29,16 @@ class ConfigModulesSpec extends InjectSpec with Matchers {
 }
 
 object ConfigModulesSpec {
-    val smod = "wiii.inject.cfgmodspec.StringM"
-    val imod = "wiii.inject.cfgmodspec.IntM"
+    val smod = "com.rxthings.inject.StringM"
+    val imod = "com.rxthings.inject.IntM"
     val sval = UUID.randomUUID.toString
     val ival = Random.nextInt
 }
-
-package cfgmodspec {
 
 class StringM extends ScalaModule {
     def configure(): Unit = bind[String].toInstance(ConfigModulesSpec.sval)
 }
 class IntM extends ScalaModule {
     def configure(): Unit = bind[Int].toInstance(ConfigModulesSpec.ival)
-}
-
 }
 

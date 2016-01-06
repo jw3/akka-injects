@@ -1,9 +1,9 @@
-package wiii.inject
+package com.rxthings.inject
 
 import akka.actor.ActorRef
+import com.rxthings.inject.test.{InjectSpec, NopActor}
 import net.codingwell.scalaguice._
 import org.scalatest.Matchers
-import wiii.inject.test.{InjectSpec, NopActor}
 
 
 class InjectActorSpec extends InjectSpec with Matchers {

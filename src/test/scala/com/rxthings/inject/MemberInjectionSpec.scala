@@ -1,11 +1,13 @@
-package wiii.inject
+package com.rxthings.inject
 
 import javax.inject.{Inject, Named}
 
+import com.rxthings.inject.MemberInjectionSpec.{PropertyInjected, M1}
+import com.rxthings.inject.test.{BindingAnnotation2, BindingAnnotation1, InjectSpec}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
-import wiii.inject.MemberInjectionSpec._
-import wiii.inject.test.{BindingAnnotation1, BindingAnnotation2, InjectSpec}
+import com.rxthings.inject.MemberInjectionSpec._
+import com.rxthings.inject.test.InjectSpec
 
 import scala.util.Random
 

@@ -1,13 +1,13 @@
-package wiii.inject
+package com.rxthings.inject
 
 import javax.inject.Provider
 
 import akka.actor._
 import com.google.inject.{Injector, Key, TypeLiteral}
+import com.rxthings.inject.Internals.BaseInjectionBuilder
 import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.KeyExtensions._
 import net.codingwell.scalaguice._
-import wiii.inject.Internals._
 
 import scala.util.Random
 

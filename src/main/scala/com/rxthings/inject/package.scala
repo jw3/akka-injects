@@ -1,7 +1,7 @@
-package wiii
+package com.rxthings
 
 import akka.actor.{Actor, ActorContext, ActorRef, ActorSystem}
-import com.google.inject.{Injector, Key}
+import com.google.inject.Injector
 import com.typesafe.config.Config
 import net.codingwell.scalaguice.ScalaModule
 
@@ -12,7 +12,7 @@ import scala.reflect.runtime.universe._
  * the inject API
  */
 package object inject {
-    import wiii.inject.Internals._
+    import com.rxthings.inject.Internals._
 
     type InjectorProvider = () => Injector
 

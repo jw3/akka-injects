@@ -1,13 +1,13 @@
-package wiii.inject
+package com.rxthings.inject
 
 import java.util.UUID
 
 import akka.actor.ActorRef
 import com.google.inject.name.Names
+import com.rxthings.inject.AnnotatedInjectionSpec.{IBadActor, _}
+import com.rxthings.inject.test.{InjectSpec, NopActor}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
-import wiii.inject.AnnotatedInjectionSpec._
-import wiii.inject.test.{InjectSpec, NopActor}
 
 import scala.util.Random
 

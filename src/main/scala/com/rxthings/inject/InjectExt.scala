@@ -1,4 +1,4 @@
-package wiii.inject
+package com.rxthings.inject
 
 import java.util.ServiceLoader
 import java.util.function.Supplier

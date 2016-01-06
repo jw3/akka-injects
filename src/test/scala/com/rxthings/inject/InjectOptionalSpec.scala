@@ -1,10 +1,10 @@
-package wiii.inject
+package com.rxthings.inject
 
 import akka.actor.{Actor, ActorRef}
+import com.rxthings.inject.InjectOptionalSpec.{BindsStuff, IDoExist, IDontExist}
+import com.rxthings.inject.test.{InjectSpec, NopActor}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
-import wiii.inject.InjectOptionalSpec.{BindsStuff, IDoExist, IDontExist}
-import wiii.inject.test.{InjectSpec, NopActor}
 
 /**
  * validate the ability to do injections optionally
