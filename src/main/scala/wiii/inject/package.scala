@@ -53,10 +53,6 @@ package object inject {
     implicit def actorSystem2injectorProvider(implicit sys: ActorSystem): InjectorProvider = () => InjectExt(sys).injector
     implicit def actorContext2actorSystem(implicit ctx: ActorContext): ActorSystem = ctx.system
 
-    implicit class MoreInjectorExtensions(i: Injector) {
-        def existingBinding[T: Manifest](key: Key[T]) = Option(i.getExistingBinding(key))
-    }
-
     //\\ internals //\\
     private def requireNonNull(o: Any, msg: => Any): Unit = require(o != null, msg)
     private def requireType[T: Manifest](fn: Type => Boolean) = {

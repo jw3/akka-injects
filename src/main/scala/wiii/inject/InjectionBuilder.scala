@@ -4,6 +4,7 @@ import javax.inject.Provider
 
 import akka.actor._
 import com.google.inject.{Injector, Key, TypeLiteral}
+import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.KeyExtensions._
 import net.codingwell.scalaguice._
 import wiii.inject.Internals._

@@ -13,7 +13,7 @@ libraryDependencies ++= {
 
     Seq(
         "org.scala-lang" % "scala-reflect" % "2.11.5",
-        "net.codingwell" %% "scala-guice" % "4.0.0",
+        "net.codingwell" %% "scala-guice" % "4.0.1",
         "com.google.inject" % "guice" % "4.0",
 
         "com.typesafe" % "config" % "1.3.0",
