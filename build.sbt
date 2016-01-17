@@ -26,3 +26,7 @@ libraryDependencies ++= {
         "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
     )
 }
+
+ScoverageSbtPlugin.ScoverageKeys.coverageMinimum := 60
+
+ScoverageSbtPlugin.ScoverageKeys.coverageFailOnMinimum := false
