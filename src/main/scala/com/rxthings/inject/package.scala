@@ -46,8 +46,8 @@ package object inject {
     }
 
     //\\ implicits //\\
-    implicit def standardBuilder2built[T](builder: InjectionBuilder[T]): T = builder.build
-    implicit def actorBuilder2actorRef[T <: Actor](builder: ActorInjectionBuilder[T]): ActorRef = builder.build
+    implicit def standardBuilder2built[T](builder: InjectionBuilder[T]): T = builder.required
+    implicit def actorBuilder2actorRef[T <: Actor](builder: ActorInjectionBuilder[T]): ActorRef = builder.required
     implicit def standardBuilder2builtOpt[T](builder: InjectionBuilder[T]): Option[T] = builder.optional
     implicit def actorBuilder2actorRefOpt[T <: Actor](builder: ActorInjectionBuilder[T]): Option[ActorRef] = builder.optional
     implicit def actorSystem2injectorProvider(implicit sys: ActorSystem): InjectorProvider = () => InjectExt(sys).injector

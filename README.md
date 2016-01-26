@@ -63,11 +63,11 @@ val optionalThing: Option[Thing] = Inject[Thing]
 val optionalActor: Option[ActorRef] = InjectActor[MyActorTaggingIface]
 ```
 
-If not explicitly typed the ```build``` or ```optional``` method must be called
+If not explicitly typed the ```required``` or ```optional``` method must be called
 ```scala
-val thing = Inject[Thing] build
+val thing = Inject[Thing] required
 
-val actor = InjectActor[MyActorTaggingIface] build
+val actor = InjectActor[MyActorTaggingIface] required
 
 val optionalActor = InjectActor[MyActorTaggingIface] optional
 ```

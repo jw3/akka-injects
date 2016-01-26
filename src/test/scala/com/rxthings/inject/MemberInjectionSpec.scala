@@ -19,19 +19,19 @@ class MemberInjectionSpec extends InjectSpec with Matchers {
 
     "annotated injection" should {
         injectTest("inject properties", M1) { implicit sys =>
-            Inject[PropertyInjected].build.intVal shouldBe MemberInjectionSpec.intVal
+            Inject[PropertyInjected].required.intVal shouldBe MemberInjectionSpec.intVal
         }
         injectTest("inject named properties", M1) { implicit sys =>
-            Inject[NamedPropertyInjected].build.intVal shouldBe MemberInjectionSpec.namedIntVal
+            Inject[NamedPropertyInjected].required.intVal shouldBe MemberInjectionSpec.namedIntVal
         }
         injectTest("inject properties into ctor", M1) { implicit sys =>
-            Inject[ConstructorInjected].build.intVal shouldBe MemberInjectionSpec.intVal
+            Inject[ConstructorInjected].required.intVal shouldBe MemberInjectionSpec.intVal
         }
         injectTest("inject named properties into ctor", M1) { implicit sys =>
-            Inject[ConstructorNamedInjected].build.intVal shouldBe MemberInjectionSpec.namedIntVal
+            Inject[ConstructorNamedInjected].required.intVal shouldBe MemberInjectionSpec.namedIntVal
         }
         injectTest("inject bound with anno properties", M1) { implicit sys =>
-            val o = Inject[OtherBindingInjected].build
+            val o = Inject[OtherBindingInjected].required
             //o.intVal1 shouldBe MemberInjectionSpec.otherIntVal1
             o.intVal2 shouldBe MemberInjectionSpec.otherIntVal2
         }

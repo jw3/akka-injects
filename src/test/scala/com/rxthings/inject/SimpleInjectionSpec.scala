@@ -15,31 +15,31 @@ class SimpleInjectionSpec extends InjectSpec with Matchers {
 
     "simple injection" should {
         injectTest("throw if trying to inject actor, regardless of binding presence") { implicit sys =>
-            intercept[Exception] {Inject[Actor].build}
+            intercept[Exception] {Inject[Actor].required}
         }
 
         injectTest("throw for boxed when no bindings are present") { implicit sys =>
-            intercept[Exception] {Inject[Int].build}
+            intercept[Exception] {Inject[Int].required}
         }
 
         injectTest("throw for String when no bindings are present") { implicit sys =>
-            intercept[Exception] {Inject[String].build}
+            intercept[Exception] {Inject[String].required}
         }
 
         injectTest("throw for trait when no bindings are present") { implicit sys =>
-            intercept[Exception] {Inject[IDontExist].build}
+            intercept[Exception] {Inject[IDontExist].required}
         }
 
         injectTest("inject boxed when bindings are present", Seq(SimpleBindings)) { implicit sys =>
-            Inject[Int].build shouldBe intVal
+            Inject[Int].required shouldBe intVal
         }
 
         injectTest("inject String when bindings are present", Seq(SimpleBindings)) { implicit sys =>
-            Inject[String].build shouldBe stringVal
+            Inject[String].required shouldBe stringVal
         }
 
         injectTest("inject trait when bindings are present", Seq(SimpleBindings)) { implicit sys =>
-            Inject[IDoExist].build shouldBe DoesExists
+            Inject[IDoExist].required shouldBe DoesExists
         }
     }
 }

@@ -47,7 +47,7 @@ trait BaseBuilder[I, O] {
     def args(args: Any*): Builder
     def annotated(name: String): Builder
 
-    def build: O
+    def required: O
     def optional: Option[O]
 
     //\\ internals //\\
@@ -77,7 +77,7 @@ private[inject] object Internals {
 
         implicit lazy val injector: Injector = ip()
 
-        def build: T = checkopt(optional)
+        def required: T = checkopt(optional)
         def optional: Option[T] = provider[T](annotatedName.map(_.name)).map(_.get())
     }
 
@@ -92,7 +92,7 @@ private[inject] object Internals {
             ThisBuilder()
         }
 
-        def build: ActorRef = checkopt(optional)
+        def required: ActorRef = checkopt(optional)
         def optional: Option[ActorRef] = {
             provider[T](annotatedName.map(_.name)).map(p =>
                 ctx.getOrElse(sys).actorOf(Props(p.get), actorName.map(_.name).getOrElse(randname))

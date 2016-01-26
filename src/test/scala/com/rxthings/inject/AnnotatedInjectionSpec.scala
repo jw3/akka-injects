@@ -18,27 +18,27 @@ class AnnotatedInjectionSpec extends InjectSpec with Matchers {
 
     "annotated injection" should {
         injectTest("throw when actor not annotated", AnnoBind) { implicit sys =>
-            intercept[Exception] {InjectActor[IBadActor].build}
+            intercept[Exception] {InjectActor[IBadActor].required}
         }
 
         injectTest("inject when actor is annotated", AnnoBind) { implicit sys =>
-            InjectActor[IBadActor].annotated(anno).build shouldBe a[ActorRef]
+            InjectActor[IBadActor].annotated(anno).required shouldBe a[ActorRef]
         }
 
         injectTest("throw when Int not annotated", AnnoBind) { implicit sys =>
-            intercept[Exception] {Inject[Int].build}
+            intercept[Exception] {Inject[Int].required}
         }
 
         injectTest("inject when Int is annotated", AnnoBind) { implicit sys =>
-            Inject[Int].annotated(anno).build shouldBe intVal
+            Inject[Int].annotated(anno).required shouldBe intVal
         }
 
         injectTest("throw when String not annotated", AnnoBind) { implicit sys =>
-            intercept[Exception] {Inject[String].build}
+            intercept[Exception] {Inject[String].required}
         }
 
         injectTest("inject when String is annotated", AnnoBind) { implicit sys =>
-            Inject[String].annotated(anno).build shouldBe stringVal
+            Inject[String].annotated(anno).required shouldBe stringVal
         }
     }
 }
