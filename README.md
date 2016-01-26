@@ -44,82 +44,50 @@ The default discovery mode is "manual"
 
 #### Examples:
 
-```scala
-val something = Inject[Something] build
-```
-
-```scala
-val something: Something = Inject[Something]
-```
-
-```scala
-val somthingOptional = Inject[Something] optional
-```
-
-```scala
-val somthingOptional: Option[Something] = Inject[Something]
-```
-
-```scala
-val actor = InjectActor[IMyActor] build
-```
-
-```scala
-val actor: ActorRef = InjectActor[IMyActor]
-```
-
-```scala
-val actor = InjectActor[IMyActor] optional
-```
-
-```scala
-val actor: Option[ActorRef] = InjectActor[IMyActor]
-```
-
-```scala
-val namedString: String = Inject[String] annotated "namedThis"
-```
-
-```scala
-val obj: IBar = Inject[IBar]
-```
-
-```scala
-val optionalObj: Option[IBar] = Inject[IBaz]
-```
-
-```scala
-val withArgsCtor: Baz = Inject[Baz] arguments("name", 1001)
-```
-
-```scala
-val bob: Option[ActorRef] = InjectActor[IMyActor] named "bob"
-```
-
-```scala
-val configed: Option[ActorRef] = InjectActor[Actor] fromConfig "path.from.cfg"
-```
-
+The implicit injection builders require the lhs to be explicitly typed
 ```scala
 val cfg: Config = Inject[Config]
+
+val thing: Thing = Inject[Thing]
+
+val named: String = Inject[String] annotated "namedString"
+
+val actor: ActorRef = InjectActor[MyActorTaggingIface]
+
+```
+
+Optional injection is enabled automatically when the lhs is an ```Option```
+```scala
+val optionalThing: Option[Thing] = Inject[Thing]
+
+val optionalActor: Option[ActorRef] = InjectActor[MyActorTaggingIface]
+```
+
+If not explicitly typed the ```build``` or ```optional``` method must be called
+```scala
+val thing = Inject[Thing] build
+
+val actor = InjectActor[MyActorTaggingIface] build
+
+val optionalActor = InjectActor[MyActorTaggingIface] optional
+```
+
+Parameters can be passed to ctors using ```arguments```
+```scala
+val thingWithCtorArgs: Thing = Inject[Thing] arguments("foo", 999)
+```
+
+Shortcuts for binding annotations, like ```@Named```
+```scala
+val bob: Option[ActorRef] = InjectActor[MyActorTaggingIface] named "bob"
 ```
 
 #### Notes:
 
-- ```annotated``` with a name (ie. @Named)
-- ```fromConfig``` use value of path for AnyVal or fqcn to create instance
-- ```args``` passed to ctor of the bound type
-- if the lhs type is specified the builder can be build implicitly
-- use ```InjectActor``` to inject Akka Actors, use ```Inject``` for everything else
-- ```fromConfig``` will override module bindings, and will fallback on them if needed
-- SPI is provided by registering Modules as services
-- Use lazy to break cycles
-- Actor injection is for new instances only
-- the application config is available by default through the Config binding
-
-#### Todos
-
-- Config key support, ie ```fromConfig```, is not implemented yet
+- [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) is provided by registering ```Module``` implementations as services
+- Use ```lazy``` to break cycles
+- Actor injection always creates new instances
+- The application config is available by default through the Config binding
 - Using ```Manifest``` for now as ScalaGuice is still bound to them
 
 ## Bugs and Feedback
