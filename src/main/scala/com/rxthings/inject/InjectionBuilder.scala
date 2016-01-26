@@ -46,7 +46,6 @@ trait BaseBuilder[I, O] {
 
     def args(args: Any*): Builder
     def annotated(name: String): Builder
-    def fromConfig(key: String): Builder
 
     def build: O
     def optional: Option[O]
@@ -67,12 +66,6 @@ private[inject] object Internals {
         var annotatedName: Option[AnnotatedName] = None
         def annotated(name: String): Builder = {
             annotatedName = Option(AnnotatedName(name))
-            ThisBuilder()
-        }
-
-        var specifiedWith: Option[SpecifiedWith] = None
-        def fromConfig(key: String): Builder = {
-            specifiedWith = Option(SpecifiedWith(key))
             ThisBuilder()
         }
 
@@ -128,6 +121,5 @@ private[inject] object Internals {
 
     case class CtorArgs(args: Any*)
     case class AnnotatedName(name: String)
-    case class SpecifiedWith(key: String)
     case class ActorName(name: String)
 }
