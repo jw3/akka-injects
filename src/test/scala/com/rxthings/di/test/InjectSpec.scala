@@ -1,9 +1,9 @@
-package com.rxthings.inject.test
+package com.rxthings.di.test
 
 import akka.actor.ActorSystem
 import com.google.inject.{Injector, Module}
-import com.rxthings.inject.InjectExt
-import com.rxthings.inject.InjectExtBuilder._
+import com.rxthings.di.InjectExt
+import com.rxthings.di.InjectExtBuilder._
 import com.typesafe.config.{Config, ConfigFactory, ConfigValueFactory}
 import org.scalatest.WordSpecLike
 

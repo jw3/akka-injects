@@ -1,10 +1,10 @@
-package com.rxthings.inject
+package com.rxthings.di
 
 import javax.inject.Provider
 
 import akka.actor._
 import com.google.inject.{Injector, Key, TypeLiteral}
-import com.rxthings.inject.Internals.BaseInjectionBuilder
+import com.rxthings.di.Internals.BaseInjectionBuilder
 import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.KeyExtensions._
 import net.codingwell.scalaguice._
@@ -55,7 +55,7 @@ trait BaseBuilder[I, O] {
 }
 
 //\\ internals //\\
-private[inject] object Internals {
+private[di] object Internals {
     abstract class BaseInjectionBuilder[I, O] extends BaseBuilder[I, O] {
         var ctorArgs: Option[CtorArgs] = None
         def args(args: Any*): Builder = {

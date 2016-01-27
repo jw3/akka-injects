@@ -1,8 +1,8 @@
-package com.rxthings.inject
+package com.rxthings.di
 
 import java.util.UUID
 
-import com.rxthings.inject.test.InjectSpec
+import com.rxthings.di.test.InjectSpec
 import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
@@ -29,8 +29,8 @@ class ConfigModulesSpec extends InjectSpec with Matchers {
 }
 
 object ConfigModulesSpec {
-    val smod = "com.rxthings.inject.StringM"
-    val imod = "com.rxthings.inject.IntM"
+    val smod = "com.rxthings.di.StringM"
+    val imod = "com.rxthings.di.IntM"
     val sval = UUID.randomUUID.toString
     val ival = Random.nextInt
 }

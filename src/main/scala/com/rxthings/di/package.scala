@@ -11,8 +11,8 @@ import scala.reflect.runtime.universe._
 /**
  * the inject API
  */
-package object inject {
-    import com.rxthings.inject.Internals._
+package object di {
+    import com.rxthings.di.Internals._
 
     type InjectorProvider = () => Injector
 
@@ -21,7 +21,7 @@ package object inject {
      * @param ip Function providing an [[Injector]]
      * @return InjectionBuilder
      */
-    def Inject[T: Manifest](implicit ip: InjectorProvider): InjectionBuilder[T] = {
+    def inject[T: Manifest](implicit ip: InjectorProvider): InjectionBuilder[T] = {
         requireType[T](not[Actor])
         requireNonNull(ip, "injection provider required")
         new InjectionBuilderImpl[T](ip)
@@ -33,7 +33,7 @@ package object inject {
      * @param ctx an ActorContext (optional)
      * @return ActorInjectionBuilder
      */
-    def InjectActor[T <: Actor : Manifest](implicit sys: ActorSystem, ctx: ActorContext = null): ActorInjectionBuilder[T] = {
+    def injectActor[T <: Actor : Manifest](implicit sys: ActorSystem, ctx: ActorContext = null): ActorInjectionBuilder[T] = {
         requireNonNull(sys, "actor system required")
         new ActorInjectionBuilderImpl[T](sys, Option(ctx))
     }

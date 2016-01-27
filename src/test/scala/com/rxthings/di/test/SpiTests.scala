@@ -1,4 +1,4 @@
-package com.rxthings.inject.test
+package com.rxthings.di.test
 
 import java.util.UUID
 

@@ -1,8 +1,8 @@
-package com.rxthings.inject
+package com.rxthings.di
 
 import akka.actor.ActorRef
 import akka.testkit.TestActorRef
-import com.rxthings.inject.test.{InjectSpec, NopActor}
+import com.rxthings.di.test.{InjectSpec, NopActor}
 import net.codingwell.scalaguice._
 import org.scalatest.Matchers
 
@@ -12,7 +12,7 @@ class InjectActorSpec extends InjectSpec with Matchers {
 
     "actor injection" should {
         injectTest("should work with traits", SimpleModule) { implicit sys =>
-            val aa: ActorRef = InjectActor[IAnActor]
+            val aa: ActorRef = injectActor[IAnActor]
             aa should not be null
         }
 
@@ -28,7 +28,7 @@ object InjectActorSpec {
     class AnActor extends IAnActor
 
     class AnActorWithInjects extends NopActor {
-        val injected: String = Inject[String]
+        val injected: String = inject[String]
     }
 
     object SimpleModule extends ScalaModule {

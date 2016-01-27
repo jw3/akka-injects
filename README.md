@@ -4,7 +4,7 @@ Akka Injects
 
 Dependency Injection DSL for Akka, using Google Guice
 
-Uses an [Akka Extension](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html) to propagate the Injector, for a seamless DI experience.
+Injector management implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html).
 
 #### Goals:
 
@@ -24,9 +24,12 @@ If you want to load the extension at ```ActorSystem``` creation time you can [Lo
 
 ```HOCON
 akka {
-  extensions = ["com.rxthings.inject.InjectExt"]
+  extensions = ["com.rxthings.di.InjectExt"]
 }
 ```
+
+#### Imports
+```import com.rxthings.di._```
 
 #### Configuration Options:
 
@@ -46,40 +49,40 @@ The default discovery mode is "manual"
 
 The implicit injection builders require the lhs to be explicitly typed
 ```scala
-val cfg: Config = Inject[Config]
+val cfg: Config = inject[Config]
 
-val thing: Thing = Inject[Thing]
+val thing: Thing = inject[Thing]
 
-val named: String = Inject[String] annotated "namedString"
+val named: String = inject[String] annotated "namedString"
 
-val actor: ActorRef = InjectActor[MyActorTaggingIface]
+val actor: ActorRef = injectActor[MyActorTaggingIface]
 
 ```
 
 Optional injection is enabled automatically when the lhs is an ```Option```
 ```scala
-val optionalThing: Option[Thing] = Inject[Thing]
+val optionalThing: Option[Thing] = inject[Thing]
 
-val optionalActor: Option[ActorRef] = InjectActor[MyActorTaggingIface]
+val optionalActor: Option[ActorRef] = injectActor[MyActorTaggingIface]
 ```
 
 If not explicitly typed the ```required``` or ```optional``` method must be called
 ```scala
-val thing = Inject[Thing] required
+val thing = inject[Thing] required
 
-val actor = InjectActor[MyActorTaggingIface] required
+val actor = injectActor[MyActorTaggingIface] required
 
-val optionalActor = InjectActor[MyActorTaggingIface] optional
+val optionalActor = injectActor[MyActorTaggingIface] optional
 ```
 
 Parameters can be passed to ctors using ```arguments```
 ```scala
-val thingWithCtorArgs: Thing = Inject[Thing] arguments("foo", 999)
+val thingWithCtorArgs: Thing = inject[Thing] arguments("foo", 999)
 ```
 
 Shortcuts for binding annotations, like ```@Named```
 ```scala
-val bob: Option[ActorRef] = InjectActor[MyActorTaggingIface] named "bob"
+val bob: Option[ActorRef] = injectActor[MyActorTaggingIface] named "bob"
 ```
 
 #### Notes:

@@ -1,8 +1,8 @@
-package com.rxthings.inject
+package com.rxthings.di
 
 import akka.testkit.TestActorRef
-import com.rxthings.inject.ExampleOfTestingSpec.M1
-import com.rxthings.inject.test.{InjectSpec, NopActor}
+import com.rxthings.di.ExampleOfTestingSpec.M1
+import com.rxthings.di.test.{InjectSpec, NopActor}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 
@@ -19,7 +19,7 @@ class ExampleOfTestingSpec extends InjectSpec with Matchers {
 }
 
 class InjectedActor extends NopActor {
-    val name: String = Inject[String] annotated "actor.name"
+    val name: String = inject[String] annotated "actor.name"
 }
 
 object ExampleOfTestingSpec {

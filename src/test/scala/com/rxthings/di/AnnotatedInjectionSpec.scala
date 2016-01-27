@@ -1,11 +1,11 @@
-package com.rxthings.inject
+package com.rxthings.di
 
 import java.util.UUID
 
 import akka.actor.ActorRef
 import com.google.inject.name.Names
-import com.rxthings.inject.AnnotatedInjectionSpec.{IBadActor, _}
-import com.rxthings.inject.test.{InjectSpec, NopActor}
+import com.rxthings.di.AnnotatedInjectionSpec.{IBadActor, _}
+import com.rxthings.di.test.{InjectSpec, NopActor}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 
@@ -18,27 +18,27 @@ class AnnotatedInjectionSpec extends InjectSpec with Matchers {
 
     "annotated injection" should {
         injectTest("throw when actor not annotated", AnnoBind) { implicit sys =>
-            intercept[Exception] {InjectActor[IBadActor].required}
+            intercept[Exception] {inject[IBadActor].required}
         }
 
         injectTest("inject when actor is annotated", AnnoBind) { implicit sys =>
-            InjectActor[IBadActor].annotated(anno).required shouldBe a[ActorRef]
+            injectActor[IBadActor].annotated(anno).required shouldBe a[ActorRef]
         }
 
         injectTest("throw when Int not annotated", AnnoBind) { implicit sys =>
-            intercept[Exception] {Inject[Int].required}
+            intercept[Exception] {inject[Int].required}
         }
 
         injectTest("inject when Int is annotated", AnnoBind) { implicit sys =>
-            Inject[Int].annotated(anno).required shouldBe intVal
+            inject[Int].annotated(anno).required shouldBe intVal
         }
 
         injectTest("throw when String not annotated", AnnoBind) { implicit sys =>
-            intercept[Exception] {Inject[String].required}
+            intercept[Exception] {inject[String].required}
         }
 
         injectTest("inject when String is annotated", AnnoBind) { implicit sys =>
-            Inject[String].annotated(anno).required shouldBe stringVal
+            inject[String].annotated(anno).required shouldBe stringVal
         }
     }
 }

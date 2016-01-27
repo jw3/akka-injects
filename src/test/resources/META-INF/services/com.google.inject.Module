@@ -1,2 +1,2 @@
-com.rxthings.inject.test.SpiModule1
-com.rxthings.inject.test.SpiModule2
+com.rxthings.di.test.SpiModule1
+com.rxthings.di.test.SpiModule2

@@ -1,13 +1,13 @@
-package com.rxthings.inject
+package com.rxthings.di
 
 import javax.inject.{Inject, Named}
 
-import com.rxthings.inject.MemberInjectionSpec.{PropertyInjected, M1}
-import com.rxthings.inject.test.{BindingAnnotation2, BindingAnnotation1, InjectSpec}
+import com.rxthings.di.MemberInjectionSpec.{PropertyInjected, M1}
+import com.rxthings.di.test.{BindingAnnotation2, BindingAnnotation1, InjectSpec}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
-import com.rxthings.inject.MemberInjectionSpec._
-import com.rxthings.inject.test.InjectSpec
+import com.rxthings.di.MemberInjectionSpec._
+import com.rxthings.di.test.InjectSpec
 
 import scala.util.Random
 
@@ -19,19 +19,19 @@ class MemberInjectionSpec extends InjectSpec with Matchers {
 
     "annotated injection" should {
         injectTest("inject properties", M1) { implicit sys =>
-            Inject[PropertyInjected].required.intVal shouldBe MemberInjectionSpec.intVal
+            inject[PropertyInjected].required.intVal shouldBe MemberInjectionSpec.intVal
         }
         injectTest("inject named properties", M1) { implicit sys =>
-            Inject[NamedPropertyInjected].required.intVal shouldBe MemberInjectionSpec.namedIntVal
+            inject[NamedPropertyInjected].required.intVal shouldBe MemberInjectionSpec.namedIntVal
         }
         injectTest("inject properties into ctor", M1) { implicit sys =>
-            Inject[ConstructorInjected].required.intVal shouldBe MemberInjectionSpec.intVal
+            inject[ConstructorInjected].required.intVal shouldBe MemberInjectionSpec.intVal
         }
         injectTest("inject named properties into ctor", M1) { implicit sys =>
-            Inject[ConstructorNamedInjected].required.intVal shouldBe MemberInjectionSpec.namedIntVal
+            inject[ConstructorNamedInjected].required.intVal shouldBe MemberInjectionSpec.namedIntVal
         }
         injectTest("inject bound with anno properties", M1) { implicit sys =>
-            val o = Inject[OtherBindingInjected].required
+            val o = inject[OtherBindingInjected].required
             //o.intVal1 shouldBe MemberInjectionSpec.otherIntVal1
             o.intVal2 shouldBe MemberInjectionSpec.otherIntVal2
         }
