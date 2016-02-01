@@ -2,21 +2,11 @@ Akka Injects
 ==========================
 [![Build Status](https://travis-ci.org/jw3/akka-injects.svg?branch=master)](https://travis-ci.org/jw3/akka-injects)
 
-Dependency Injection DSL for Akka, using Google Guice
+Dependency Injection DSL for Akka, using Google Guice.
 
-Injector management implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html).
+Implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html) which allows for hands-off creation and management of the Injector.
 
-#### Goals:
-
-- Concise DSL
-- Injects to ```val```
-- Annotations not required
-- Clean ```Option``` integration
-- Actors inject as children when in parent scope
-- Transparently propagate Injector instance
-- Full support of traditional Guice patterns
-
-#### Installation:
+#### Installation
 
 The Inject Extension will be loaded on demand by default.
 
@@ -28,51 +18,67 @@ akka {
 }
 ```
 
+#### Artifacts
+
+Add a resolver to your sbt build
+
+```resolvers += "jw3 at bintray" at "https://dl.bintray.com/jw3/maven"```
+
+Add dependency
+
+```"com.rxthings" %% "akka-injects" % "0.2"```
+
 #### Imports
 ```import com.rxthings.di._```
 
-#### Configuration Options:
+#### Configuration Options
 
-- "akka.inject.mode": specifies the module discovery strategy [manual | config | spi]
-- "akka.inject.modules": specifies the FQCN list of Modules when in 'config' mode
-- "akka.inject.cfg": specify whether to provide the application Config through the injector
+- ```akka.inject.mode```: specifies the module discovery strategy ```[manual | config | spi]```
+- ```akka.inject.modules```: specifies the FQCN list of Modules when in ```config``` mode
+- ```akka.inject.cfg```: specify whether to provide the application Config through the Injector
 
-#### Modes:
+#### Modes
 
-- Manual : "manual" : discovery mode that only uses Modules added through InjectExtBuilder
-- Configuration : "config" : discovery mode that uses modules specified in the CfgModuleDiscoveryKey
-- SPI : "spi" : discovery mode that uses modules specified through SPI
+- Manual : ```manual``` : discovery mode that only uses Modules added through ```InjectExtBuilder```
+- Configuration : ```config``` : discovery mode that uses modules specified in the ```CfgModuleDiscoveryKey```
+- SPI : ```spi``` : discovery mode that uses modules specified through SPI
 
-The default discovery mode is "manual"
+The default discovery mode is ```manual```
 
-#### Examples:
+#### Examples
 
-The implicit injection builders require the lhs to be explicitly typed
+The injection is automatic when the lhs is explicitly typed
 ```scala
-val cfg: Config = inject[Config]
+val config: Config = inject[Config]
 
 val thing: Thing = inject[Thing]
 
 val named: String = inject[String] annotated "namedString"
 
-val actor: ActorRef = injectActor[MyActorTaggingIface]
+val actor: ActorRef = injectActor[MyActor]
 
 ```
 
-Optional injection is enabled automatically when the lhs is an ```Option```
+Optional injection when the lhs is an ```Option```
 ```scala
 val optionalThing: Option[Thing] = inject[Thing]
 
-val optionalActor: Option[ActorRef] = injectActor[MyActorTaggingIface]
+val optionalActor: Option[ActorRef] = injectActor[MyActor]
+
+val noThing: Option[Unbound] = inject[Unbound] // == None
+
+val noActor: Option[ActorRef] = injectActor[UnboundActor] // == None
 ```
 
-If not explicitly typed the ```required``` or ```optional``` method must be called
+When lhs is not explicitly typed the ```required``` or ```optional``` method must be called
 ```scala
 val thing = inject[Thing] required
 
-val actor = injectActor[MyActorTaggingIface] required
+val actor = injectActor[MyActor] required
 
-val optionalActor = injectActor[MyActorTaggingIface] optional
+val optionalThing = inject[Thing] optional
+
+val optionalActor = injectActor[MyActor] optional
 ```
 
 Parameters can be passed to ctors using ```arguments```
@@ -82,14 +88,31 @@ val thingWithCtorArgs: Thing = inject[Thing] arguments("foo", 999)
 
 Shortcuts for binding annotations, like ```@Named```
 ```scala
-val bob: Option[ActorRef] = injectActor[MyActorTaggingIface] named "bob"
+val bob: Option[ActorRef] = injectActor[MyActor] named "bob"
 ```
 
-#### Notes:
+Injection within an Actor is easy and to ```val```
+```scala
+class MyActor extends Actor {
+    val otherActor: ActorRef = inject[MyOtherActor] // otherActor parent == this
+    val configProp: String = inject[String] named "myactor.hostname"
+}
+```
 
-- [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) is provided by registering ```Module``` implementations as services
+#### Goals
+
+- Concise intuitive DSL
+- Inject values to ```val```
+- Do not require Annotations
+- Do not require special bindings to inject ```Option```
+- Actors injection that respects parent scope (ie. inject as child)
+- Hands off Injector management
+- Full support of standard Guice patterns
+
+#### Notes
+
+- [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) is provided by registering ```com.google.inject.Module``` implementations as services
 - Use ```lazy``` to break cycles
-- Actor injection always creates new instances
 - The application config is available by default through the Config binding
 - Using ```Manifest``` for now as ScalaGuice is still bound to them
 
@@ -97,7 +120,7 @@ val bob: Option[ActorRef] = injectActor[MyActorTaggingIface] named "bob"
 
 For bugs, questions and discussions please use the [Github Issues](https://github.com/jw3/akka-injects/issues).
 
-## LICENSE
+## License
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
