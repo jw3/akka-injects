@@ -39,9 +39,9 @@ Add dependency
 
 #### Modes
 
-- Manual : ```manual``` : discovery mode that only uses Modules added through ```InjectExtBuilder```
-- Configuration : ```config``` : discovery mode that uses modules specified in the ```CfgModuleDiscoveryKey```
-- SPI : ```spi``` : discovery mode that uses modules specified through SPI
+- ```manual```: Manual discovery mode that only uses Modules added through ```InjectExtBuilder```
+- ```config```: Configuration discovery mode that uses modules specified in the ```CfgModuleDiscoveryKey```
+- ```spi```: SPI discovery mode uses modules provided by the [Java Service Provider Interface](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) (SPI)
 
 The default discovery mode is ```manual```
 
