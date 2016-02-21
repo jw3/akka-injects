@@ -26,3 +26,5 @@ libraryDependencies ++= {
         "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
     )
 }
+
+com.updateimpact.Plugin.apiKey in ThisBuild := sys.env.getOrElse("UPDATEIMPACT_API_KEY", (com.updateimpact.Plugin.apiKey in ThisBuild).value)

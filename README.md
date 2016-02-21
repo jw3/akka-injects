@@ -1,6 +1,7 @@
 Akka Injects
 ==========================
 [![Build Status](https://travis-ci.org/jw3/akka-injects.svg?branch=master)](https://travis-ci.org/jw3/akka-injects)
+[![Dependencies](https://app.updateimpact.com/badge/701268856357916672/akka-injects.svg?config=compile)](https://app.updateimpact.com/latest/701268856357916672/akka-injects)
 
 Dependency Injection DSL for Akka, using Google Guice.
 
@@ -26,7 +27,7 @@ Add a resolver to your sbt build
 
 Add dependency
 
-```"com.rxthings" %% "akka-injects" % "0.2"```
+```"com.rxthings" %% "akka-injects" % "0.3"```
 
 #### Imports
 ```import com.rxthings.di._```
