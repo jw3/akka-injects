@@ -26,7 +26,7 @@ Add a resolver to your sbt build
 
 Add dependency
 
-```"com.rxthings" %% "akka-injects" % "0.2"```
+```"com.rxthings" %% "akka-injects" % "0.3"```
 
 #### Imports
 ```import com.rxthings.di._```
