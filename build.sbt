@@ -21,6 +21,7 @@ libraryDependencies ++= {
 
         "com.typesafe.akka" %% "akka-actor" % akkaVersion,
         "com.typesafe.akka" %% "akka-slf4j" % akkaVersion % Runtime,
+        "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
 
         "org.scalatest" %% "scalatest" % "2.2.5" % Test,
         "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
