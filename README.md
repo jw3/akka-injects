@@ -5,13 +5,15 @@ Akka Injects
 
 Dependency Injection DSL for Akka, using Google Guice.
 
-Implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html) which allows for hands-off creation and management of the Injector.
+Implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html) allowing for hands-off creation and management of the Injector.
 
 #### Installation
 
 The Inject Extension will be loaded on demand by default.
 
-If you want to load the extension at ```ActorSystem``` creation time you can [Load from Configuration](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html#Loading_from_Configuration).
+Or
+
+If you want to force load the extension at ```ActorSystem``` creation time you can [Load from Configuration](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html#Loading_from_Configuration).
 
 ```HOCON
 akka {
@@ -21,15 +23,18 @@ akka {
 
 #### Artifacts
 
-Add a resolver to your sbt build
+To include in your SBT project add a resolver to your sbt build
 
 ```resolvers += "jw3 at bintray" at "https://dl.bintray.com/jw3/maven"```
 
-Add dependency
+and add the dependency
 
-```"com.rxthings" %% "akka-injects" % "0.3"```
+```"com.rxthings" %% "akka-injects" % "0.4"```
 
 #### Imports
+
+All required components are included with
+
 ```import com.rxthings.di._```
 
 #### Configuration Options
@@ -38,17 +43,17 @@ Add dependency
 - ```akka.inject.modules```: specifies the FQCN list of Modules when in ```config``` mode
 - ```akka.inject.cfg```: specify whether to provide the application Config through the Injector
 
-#### Modes
+#### Discovery Modes
+
+The default mode is ```manual```
 
 - ```manual```: Manual discovery mode that only uses Modules added through ```InjectExtBuilder```
 - ```config```: Configuration discovery mode that uses modules specified in the ```CfgModuleDiscoveryKey```
 - ```spi```: SPI discovery mode uses modules provided by the [Java Service Provider Interface](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) (SPI)
 
-The default discovery mode is ```manual```
-
 #### Examples
 
-The injection is automatic when the lhs is explicitly typed
+Injection is implicit when the lhs is explicitly typed
 ```scala
 val config: Config = inject[Config]
 
@@ -60,7 +65,7 @@ val actor: ActorRef = injectActor[MyActor]
 
 ```
 
-Optional injection when the lhs is an ```Option```
+Optional injection is also implicit when the lhs is an ```Option```
 ```scala
 val optionalThing: Option[Thing] = inject[Thing]
 
@@ -71,7 +76,7 @@ val noThing: Option[Unbound] = inject[Unbound] // == None
 val noActor: Option[ActorRef] = injectActor[UnboundActor] // == None
 ```
 
-When lhs is not explicitly typed the ```required``` or ```optional``` method must be called
+When lhs is not explicitly typed, the ```required``` or ```optional``` method must be called
 ```scala
 val thing = inject[Thing] required
 
@@ -92,7 +97,7 @@ Shortcuts for binding annotations, like ```@Named```
 val bob: Option[ActorRef] = injectActor[MyActor] named "bob"
 ```
 
-Injection within an Actor is easy and to ```val```
+Injection within an Actor is easy and final
 ```scala
 class MyActor extends Actor {
     val otherActor: ActorRef = inject[MyOtherActor] // otherActor parent == this
@@ -102,17 +107,17 @@ class MyActor extends Actor {
 
 #### Goals
 
-- Concise intuitive DSL
-- Inject values to ```val```
+- Concise DSL
+- Inject to ```val```
 - Do not require Annotations
-- Do not require special bindings to inject ```Option```
-- Actors injection that respects parent scope (ie. inject as child)
+- Do not require special case bindings to inject, eg. ```Option```
+- Provide Actor injection that respects parent scope (ie. inject as child)
 - Hands off Injector management
 - Full support of standard Guice patterns
 
 #### Notes
 
-- [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) is provided by registering ```com.google.inject.Module``` implementations as services
+- [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) is provided by registering ```com.google.inject.Module``` implementations as services within `META-INF.services`
 - Use ```lazy``` to break cycles
 - The application config is available by default through the Config binding
 - Using ```Manifest``` for now as ScalaGuice is still bound to them
