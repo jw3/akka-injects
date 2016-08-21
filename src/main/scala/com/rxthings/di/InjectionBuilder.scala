@@ -9,7 +9,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.KeyExtensions._
 import net.codingwell.scalaguice._
 
-import scala.util.Random
+import scala.util.{Failure, Random, Success, Try}
 
 
 /**
@@ -77,7 +77,14 @@ private[di] object Internals {
 
         implicit lazy val injector: Injector = ip()
 
-        def required: T = checkopt(optional)
+        def required: T = checkopt(optional) match {
+          case Success(t) => t
+          case Failure(ex@InjectionNotAvailable(_)) =>
+            throw ex.copy(name = annotatedName)
+          case Failure(ex) =>
+            throw ex
+        }
+
         def optional: Option[T] = provider[T](annotatedName.map(_.name)).map(_.get())
     }
 
@@ -92,7 +99,15 @@ private[di] object Internals {
             ThisBuilder()
         }
 
-        def required: ActorRef = checkopt(optional)
+        def required: ActorRef = checkopt(optional) match {
+          case Success(ref) => ref
+          case Failure(ex@InjectionNotAvailable(_)) =>
+            throw ex.copy(name = annotatedName)
+          case Failure(ex) =>
+            throw ex
+        }
+
+
         def optional: Option[ActorRef] = {
             provider[T](annotatedName.map(_.name)).map(p =>
                 ctx.getOrElse(sys).actorOf(Props(p.get), actorName.map(_.name).getOrElse(randname))
@@ -101,9 +116,9 @@ private[di] object Internals {
     }
 
     @throws[IllegalStateException]("If injection of [T] is not available")
-    def checkopt[T: Manifest](opt: Option[T]): T = opt match {
-        case Some(t) => t
-        case None => throw new IllegalStateException(s"Injection of [${manifest[T].runtimeClass.getName}}] is not available")
+    def checkopt[T: Manifest](opt: Option[T]): Try[T] = opt match {
+        case Some(t) => Success(t)
+        case None => Failure(InjectionNotAvailable[T]())
     }
 
     def randname: String = Random.alphanumeric.take(10).mkString
@@ -129,4 +144,10 @@ private[di] object Internals {
     case class CtorArgs(args: Any*)
     case class AnnotatedName(name: String)
     case class ActorName(name: String)
+
+    case class InjectionNotAvailable[T: Manifest](name: Option[AnnotatedName] = None) extends IllegalStateException {
+      override def getMessage: String = {
+        s"Injection of [${manifest[T].runtimeClass.getName}] is not available" + name.map(n => s" for @Named(${n.name})").getOrElse("")
+      }
+    }
 }

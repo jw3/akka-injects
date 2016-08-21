@@ -62,6 +62,13 @@ class AnnotatedInjectionSpec extends InjectSpec with Matchers {
             inject[Long].annotated(anno).required shouldBe annotatedLongVal
             inject[Long].required shouldBe unannotatedLongVal
         }
+
+        injectTest("throw descriptive exception", AnnoBind) { implicit sys =>
+            val name = "__doesnt_exist__"
+            intercept[IllegalStateException] {
+                inject[String].annotated(name).required
+            }.getMessage should include(name)
+        }
     }
 }
 
