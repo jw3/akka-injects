@@ -109,7 +109,14 @@ private[di] object Internals {
     def randname: String = Random.alphanumeric.take(10).mkString
 
     def provider[T: Manifest](annotated: Option[String] = None)(implicit inj: Injector): Option[Provider[T]] = {
-        annotated.flatMap(a => prov(annoKey[T](a))).orElse(prov(stdKey[T]))
+        annotated match {
+            case None => prov(stdKey[T])
+            case Some(anno) =>
+                prov(annoKey[T](anno)) match {
+                    case opt@Some(_) => opt
+                    case None => throw new IllegalStateException(s"no provider for annotation @Named($anno)")
+                }
+        }
     }
 
     def prov[T: Manifest](keyFn: TypeLiteral[T] => Key[T])(implicit inj: Injector): Option[Provider[T]] = {
