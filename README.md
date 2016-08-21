@@ -3,13 +3,22 @@ Akka Injects
 [![Build Status](https://travis-ci.org/jw3/akka-injects.svg?branch=master)](https://travis-ci.org/jw3/akka-injects)
 [![Dependencies](https://app.updateimpact.com/badge/701268856357916672/akka-injects.svg?config=compile)](https://app.updateimpact.com/latest/701268856357916672/akka-injects)
 
-Dependency Injection DSL for Akka, using Google Guice.
+Dependency Injection DSL for Akka.
+Powered by [Guice](https://github.com/google/guice) and implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.4.9/scala/extending-akka.html).
 
-Implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html) allowing for hands-off creation and management of the Injector.
+#### Goals
+
+- Inject to ```val```
+- Easy optional injects
+- Do not require Annotations
+- Respect Actor parent context
+- Avoid handling Injectors
+- Act like Guice
+- Concise DSL
 
 #### Installation
 
-The Inject Extension will be loaded on demand by default.
+By default the Inject Extension will be loaded on first use.
 
 Or
 
@@ -29,11 +38,11 @@ To include in your SBT project add a resolver to your sbt build
 
 and add the dependency
 
-```"com.rxthings" %% "akka-injects" % "0.4"```
+```libraryDependencies += "com.rxthings" %% "akka-injects" % "0.5"```
 
 #### Imports
 
-All required components are included with
+All required imports are included with
 
 ```import com.rxthings.di._```
 
@@ -43,7 +52,7 @@ All required components are included with
 - ```akka.inject.modules```: specifies the FQCN list of Modules when in ```config``` mode
 - ```akka.inject.cfg```: specify whether to provide the application Config through the Injector
 
-#### Discovery Modes
+#### Module Discovery Modes
 
 The default mode is ```manual```
 
@@ -51,7 +60,7 @@ The default mode is ```manual```
 - ```config```: Configuration discovery mode that uses modules specified in the ```CfgModuleDiscoveryKey```
 - ```spi```: SPI discovery mode uses modules provided by the [Java Service Provider Interface](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) (SPI)
 
-#### Examples
+#### Example Usage
 
 Injection is implicit when the lhs is explicitly typed
 ```scala
@@ -105,22 +114,12 @@ class MyActor extends Actor {
 }
 ```
 
-#### Goals
-
-- Concise DSL
-- Inject to ```val```
-- Do not require Annotations
-- Do not require special case bindings to inject, eg. ```Option```
-- Provide Actor injection that respects parent scope (ie. inject as child)
-- Hands off Injector management
-- Full support of standard Guice patterns
-
 #### Notes
 
 - [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) is provided by registering ```com.google.inject.Module``` implementations as services within `META-INF.services`
 - Use ```lazy``` to break cycles
-- The application config is available by default through the Config binding
-- Using ```Manifest``` for now as ScalaGuice is still bound to them
+- The application config is available by default through the ```Config``` binding
+- [ScalaGuice](https://github.com/codingwell/scala-guice) uses ```Manifest``` so we do too
 
 ## Bugs and Feedback
 
