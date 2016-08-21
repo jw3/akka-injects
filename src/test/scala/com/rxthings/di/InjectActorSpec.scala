@@ -1,5 +1,7 @@
 package com.rxthings.di
 
+import java.util.UUID
+
 import akka.actor.ActorRef
 import akka.testkit.TestActorRef
 import com.rxthings.di.test.{InjectSpec, NopActor}
@@ -19,6 +21,13 @@ class InjectActorSpec extends InjectSpec with Matchers {
         injectTest("should inject actor members", SimpleModule) { implicit sys =>
             val testref = TestActorRef[AnActorWithInjects]
             testref.underlyingActor.injected shouldBe "foo"
+        }
+
+        injectTest("descriptive exception", SimpleModule) { implicit sys =>
+            val name = UUID.randomUUID.toString
+            intercept[IllegalStateException] {
+                injectActor[IAnActor].annotated(name).required
+            }.getMessage should include(name)
         }
     }
 }
