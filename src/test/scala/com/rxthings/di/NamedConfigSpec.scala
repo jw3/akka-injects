@@ -2,7 +2,7 @@ package com.rxthings.di
 
 import com.google.inject.Guice
 import com.google.inject.name.Names
-import com.typesafe.config.{ConfigValueFactory, Config, ConfigFactory}
+import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.scalatest.{Matchers, WordSpec}
 

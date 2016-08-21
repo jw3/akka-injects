@@ -2,8 +2,8 @@ package com.rxthings.di
 
 import akka.actor.ActorSystem
 import com.rxthings.di.test.InjectSpec
-import org.scalatest.Matchers
 import net.codingwell.scalaguice.InjectorExtensions._
+import org.scalatest.Matchers
 
 
 /**

@@ -15,61 +15,62 @@ import scala.collection.mutable
 
 /**
  * Akka [[Extension]] which encapsulates a Guice [[Injector]]
+ *
  * @param injector top level Guice Injector
  */
 class InjectExtImpl(val injector: Injector) extends Extension
 
 object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider with InjectExtBuilder {
-    private val manualModules = ThreadLocal.withInitial(new Supplier[mutable.Set[Module]] {
-        def get() = mutable.Set[Module]()
-    })
+  private val manualModules = ThreadLocal.withInitial(new Supplier[mutable.Set[Module]] {
+    def get() = mutable.Set[Module]()
+  })
 
-    /**
-     * Manually add modules to the injector
-     * All modules must be added prior to creating the ActorSystem
-     */
-    def addModules(m: Module*): InjectExtBuilder = {
-        manualModules.get().addAll(m)
-        this
+  /**
+   * Manually add modules to the injector
+   * All modules must be added prior to creating the ActorSystem
+   */
+  def addModules(m: Module*): InjectExtBuilder = {
+    manualModules.get().addAll(m)
+    this
+  }
+
+  // internals \\
+
+  override def createExtension(sys: ExtendedActorSystem) = {
+    import InjectExtBuilder._
+
+    val config = sys.settings.config
+    val modules = config.getAs[String](ModuleDiscoveryModeKey).getOrElse(DefaultModuleDiscoveryModeMode) match {
+      case ManualModuleDiscovery => manualModules.get().toList
+      case CfgModuleDiscovery => config.getAs[Seq[String]](CfgModuleDiscoveryKey).map(_.map(strToModule)).getOrElse(Seq()).toList
+      case SpiModuleDiscovery => ServiceLoader.load(classOf[Module]).toList
+      case v => throw new IllegalArgumentException(s"invalid $ModuleDiscoveryModeKey value, $v")
     }
+    manualModules.remove()
 
-    // internals \\
+    val finalModules = addCfgModule(config) :: modules
+    val defaultModules = Seq(Defaults.actorSystem(sys))
+    val injector = Guice.createInjector(finalModules ++ defaultModules)
+    new InjectExtImpl(injector)
+  }
 
-    override def createExtension(sys: ExtendedActorSystem) = {
-        import InjectExtBuilder._
+  override def lookup() = InjectExt
 
-        val config = sys.settings.config
-        val modules = config.getAs[String](ModuleDiscoveryModeKey).getOrElse(DefaultModuleDiscoveryModeMode) match {
-            case ManualModuleDiscovery => manualModules.get().toList
-            case CfgModuleDiscovery => config.getAs[Seq[String]](CfgModuleDiscoveryKey).map(_.map(strToModule)).getOrElse(Seq()).toList
-            case SpiModuleDiscovery => ServiceLoader.load(classOf[Module]).toList
-            case v => throw new IllegalArgumentException(s"invalid $ModuleDiscoveryModeKey value, $v")
-        }
-        manualModules.remove()
-
-        val finalModules = addCfgModule(config) :: modules
-        val defaultModules = Seq(Defaults.actorSystem(sys))
-        val injector = Guice.createInjector(finalModules ++ defaultModules)
-        new InjectExtImpl(injector)
+  private def strToModule(fqcn: String): Module = {
+    // todo;; should handle this in scala reflection to support objects
+    Class.forName(fqcn).newInstance() match {
+      case o: Module => o
+      case o => throw new IllegalArgumentException(s"$o is not a com.google.inject.Module, $fqcn")
     }
-
-    override def lookup() = InjectExt
-
-    private def strToModule(fqcn: String): Module = {
-        // todo;; should handle this in scala reflection to support objects
-        Class.forName(fqcn).newInstance() match {
-            case o: Module => o
-            case o => throw new IllegalArgumentException(s"$o is not a com.google.inject.Module, $fqcn")
-        }
-    }
+  }
 }
 
 /**
  * Defines the module adding interface on the InjectExt
  */
 trait InjectExtBuilder {
-    this: ExtensionId[_] =>
-    def addModules(m: Module*): InjectExtBuilder
+  this: ExtensionId[_] =>
+  def addModules(m: Module*): InjectExtBuilder
 }
 
 /**
@@ -89,26 +90,26 @@ trait InjectExtBuilder {
  * - The default discovery mode is ManualModuleDiscovery
  */
 object InjectExtBuilder {
-    val ModuleDiscoveryModeKey = "akka.inject.mode"
-    val CfgModuleDiscoveryKey = "akka.inject.modules"
+  val ModuleDiscoveryModeKey = "akka.inject.mode"
+  val CfgModuleDiscoveryKey = "akka.inject.modules"
 
-    val ManualModuleDiscovery = "manual"
-    val CfgModuleDiscovery = "config"
-    val SpiModuleDiscovery = "spi"
-    val DefaultModuleDiscoveryModeMode = ManualModuleDiscovery
+  val ManualModuleDiscovery = "manual"
+  val CfgModuleDiscovery = "config"
+  val SpiModuleDiscovery = "spi"
+  val DefaultModuleDiscoveryModeMode = ManualModuleDiscovery
 
-    val injectConfigurationKey = "akka.inject.cfg"
+  val injectConfigurationKey = "akka.inject.cfg"
 
-    def addCfgModule(cfg: Config): Module = {
-        cfg.getAs[Boolean](injectConfigurationKey).getOrElse(true) match {
-            case true => new ConfigModule(cfg)
-            case false => Modules.EMPTY_MODULE
-        }
+  def addCfgModule(cfg: Config): Module = {
+    cfg.getAs[Boolean](injectConfigurationKey).getOrElse(true) match {
+      case true => new ConfigModule(cfg)
+      case false => Modules.EMPTY_MODULE
     }
+  }
 }
 
 private object Defaults {
-    def actorSystem(sys: ActorSystem) = new ScalaModule {
-        def configure(): Unit = bind[ActorSystem].toInstance(sys)
-    }
+  def actorSystem(sys: ActorSystem) = new ScalaModule {
+    def configure(): Unit = bind[ActorSystem].toInstance(sys)
+  }
 }

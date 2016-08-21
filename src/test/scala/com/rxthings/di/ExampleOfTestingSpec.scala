@@ -10,24 +10,24 @@ import org.scalatest.Matchers
  *
  */
 class ExampleOfTestingSpec extends InjectSpec with Matchers {
-    "Using TestActorRef" should {
-        injectTest("support injection", M1) { implicit sys =>
-            val actor = TestActorRef[InjectedActor]
-            actor.underlyingActor.name shouldBe M1.actorName
-        }
+  "Using TestActorRef" should {
+    injectTest("support injection", M1) { implicit sys =>
+      val actor = TestActorRef[InjectedActor]
+      actor.underlyingActor.name shouldBe M1.actorName
     }
+  }
 }
 
 class InjectedActor extends NopActor {
-    val name: String = inject[String] annotated "actor.name"
+  val name: String = inject[String] annotated "actor.name"
 }
 
 object ExampleOfTestingSpec {
 
-    object M1 extends ScalaModule {
-        val actorName = "bob"
-        def configure(): Unit = {
-            bind[String].annotatedWithName("actor.name").toInstance(actorName)
-        }
+  object M1 extends ScalaModule {
+    val actorName = "bob"
+    def configure(): Unit = {
+      bind[String].annotatedWithName("actor.name").toInstance(actorName)
     }
+  }
 }

@@ -1,8 +1,8 @@
 package com.rxthings.di
 
 
-import com.typesafe.config.{ConfigValue, Config}
 import com.typesafe.config.ConfigValueType._
+import com.typesafe.config.{Config, ConfigValue}
 import com.typesafe.scalalogging.LazyLogging
 import net.codingwell.scalaguice.ScalaModule
 
