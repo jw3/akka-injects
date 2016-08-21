@@ -3,18 +3,19 @@ package com.rxthings.di
 import java.util.ServiceLoader
 import java.util.function.Supplier
 
-import akka.actor.{ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider}
+import akka.actor._
 import com.google.inject.util.Modules
 import com.google.inject.{Guice, Injector, Module}
 import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
+import net.codingwell.scalaguice.ScalaModule
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 
 /**
  * Akka [[Extension]] which encapsulates a Guice [[Injector]]
- * @param injector
+ * @param injector top level Guice Injector
  */
 class InjectExtImpl(val injector: Injector) extends Extension
 
@@ -47,17 +48,19 @@ object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider wit
         manualModules.remove()
 
         val finalModules = addCfgModule(config) :: modules
-        val injector = Guice.createInjector(finalModules)
+        val defaultModules = Seq(Defaults.actorSystem(sys))
+        val injector = Guice.createInjector(finalModules ++ defaultModules)
         new InjectExtImpl(injector)
     }
 
     override def lookup() = InjectExt
 
     private def strToModule(fqcn: String): Module = {
-        // todo;; should handle this in scala form to support objects
-        val o = Class.forName(fqcn).newInstance()
-        if (o.isInstanceOf[Module]) o.asInstanceOf[Module]
-        else throw new IllegalArgumentException(s"not a module, $fqcn")
+        // todo;; should handle this in scala reflection to support objects
+        Class.forName(fqcn).newInstance() match {
+            case o: Module => o
+            case o => throw new IllegalArgumentException(s"$o is not a com.google.inject.Module, $fqcn")
+        }
     }
 }
 
@@ -101,5 +104,11 @@ object InjectExtBuilder {
             case true => new ConfigModule(cfg)
             case false => Modules.EMPTY_MODULE
         }
+    }
+}
+
+private object Defaults {
+    def actorSystem(sys: ActorSystem) = new ScalaModule {
+        def configure(): Unit = bind[ActorSystem].toInstance(sys)
     }
 }
