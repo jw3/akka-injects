@@ -2,8 +2,6 @@ package com.rxthings
 
 import akka.actor.{Actor, ActorContext, ActorRef, ActorSystem}
 import com.google.inject.Injector
-import com.typesafe.config.Config
-import net.codingwell.scalaguice.ScalaModule
 
 import scala.reflect.runtime.universe._
 
@@ -38,16 +36,6 @@ package object di {
   def injectActor[T <: Actor : Manifest](implicit sys: ActorSystem, ctx: ActorContext = null): ActorInjectionBuilder[T] = {
     requireNonNull(sys, "actor system required")
     new ActorInjectionBuilderImpl[T](sys, Option(ctx))
-  }
-
-  /**
-   * [[com.google.inject.Module]] that provides the application [[Config]]
-   */
-  class ConfigModule(cfg: Config) extends ScalaModule {
-    def configure(): Unit = {
-      bind[Config].toInstance(cfg)
-      install(NamedConfigModule(cfg))
-    }
   }
 
   //\\ implicits //\\

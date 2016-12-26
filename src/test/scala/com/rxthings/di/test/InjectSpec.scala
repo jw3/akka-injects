@@ -7,7 +7,7 @@ import com.rxthings.di.InjectExtBuilder._
 import com.typesafe.config.{Config, ConfigFactory, ConfigValueFactory}
 import org.scalatest.WordSpecLike
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
@@ -34,7 +34,7 @@ trait InjectSpec extends WordSpecLike {
   /**
    * Compact configuration manipulation
    */
-  def cfg(parts: (String, _ <: AnyRef)*): Config = ConfigFactory.parseMap(parts.toMap[String, AnyRef])
+  def cfg(parts: (String, _ <: AnyRef)*): Config = ConfigFactory.parseMap(parts.toMap[String, AnyRef].asJava)
 
   /**
    * Specify whether to make the Config object available as an injection
@@ -43,7 +43,7 @@ trait InjectSpec extends WordSpecLike {
   def modMode(key: String) = ModuleDiscoveryModeKey -> key
   def cfgMode = modMode(CfgModuleDiscovery)
   def spiMode = modMode(SpiModuleDiscovery)
-  def modCfg(mfqcn: String*) = CfgModuleDiscoveryKey -> ConfigValueFactory.fromIterable(mfqcn)
+  def modCfg(mfqcn: String*) = CfgModuleDiscoveryKey -> ConfigValueFactory.fromIterable(mfqcn.asJava)
 
 
   //\\ implicits //\\

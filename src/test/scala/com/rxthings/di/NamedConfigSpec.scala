@@ -116,9 +116,9 @@ object NamedConfigSpec {
   }
 
   def config[T](k: String, v: T): NamedConfigModule = {
-    import scala.collection.JavaConversions._
+    import scala.collection.JavaConverters._
     //val cfg = ConfigFactory.empty().withValue(k, ConfigValueFactory.fromMap(Map(k -> v.toString)))
-    val cfg = ConfigFactory.parseMap(Map(k -> ConfigValueFactory.fromMap(Map(k -> v.toString, "x" -> "y"))))
+    val cfg = ConfigFactory.parseMap(Map(k -> ConfigValueFactory.fromMap(Map(k -> v.toString, "x" -> "y").asJava)).asJava)
     NamedConfigModule(cfg)
   }
 

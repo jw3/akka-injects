@@ -1,7 +1,6 @@
 package com.rxthings.di
 
 import java.util.ServiceLoader
-import java.util.function.Supplier
 
 import akka.actor._
 import com.google.inject.util.Modules
@@ -10,27 +9,25 @@ import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
 import net.codingwell.scalaguice.ScalaModule
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 /**
- * Akka [[Extension]] which encapsulates a Guice [[Injector]]
+ * Akka Extension which encapsulates a Guice Injector
  *
  * @param injector top level Guice Injector
  */
 class InjectExtImpl(val injector: Injector) extends Extension
 
 object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider with InjectExtBuilder {
-  private val manualModules = ThreadLocal.withInitial(new Supplier[mutable.Set[Module]] {
-    def get() = mutable.Set[Module]()
-  })
+  private val manualModules: ThreadLocal[mutable.Set[Module]] = ThreadLocal.withInitial(() ⇒ mutable.Set[Module]())
 
   /**
    * Manually add modules to the injector
    * All modules must be added prior to creating the ActorSystem
    */
   def addModules(m: Module*): InjectExtBuilder = {
-    manualModules.get().addAll(m)
+    manualModules.set(manualModules.get() ++ m)
     this
   }
 
@@ -43,14 +40,14 @@ object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider wit
     val modules = config.getAs[String](ModuleDiscoveryModeKey).getOrElse(DefaultModuleDiscoveryModeMode) match {
       case ManualModuleDiscovery => manualModules.get().toList
       case CfgModuleDiscovery => config.getAs[Seq[String]](CfgModuleDiscoveryKey).map(_.map(strToModule)).getOrElse(Seq()).toList
-      case SpiModuleDiscovery => ServiceLoader.load(classOf[Module]).toList
+      case SpiModuleDiscovery => ServiceLoader.load(classOf[Module]).iterator.asScala.toList
       case v => throw new IllegalArgumentException(s"invalid $ModuleDiscoveryModeKey value, $v")
     }
     manualModules.remove()
 
     val finalModules = addCfgModule(config) :: modules
     val defaultModules = Seq(Defaults.actorSystem(sys))
-    val injector = Guice.createInjector(finalModules ++ defaultModules)
+    val injector = Guice.createInjector(finalModules ++ defaultModules: _*)
     new InjectExtImpl(injector)
   }
 
