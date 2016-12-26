@@ -17,7 +17,7 @@ package object di {
   /**
    * entry point to the Inject of non-actors
    *
-   * @param ip Function providing an [[Injector]]
+   * @param ip Function providing an Injector
    * @return InjectionBuilder
    */
   def inject[T: Manifest](implicit ip: InjectorProvider): InjectionBuilder[T] = {

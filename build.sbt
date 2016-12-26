@@ -1,6 +1,6 @@
 organization := "com.rxthings"
 name := "akka-injects"
-version := "0.6-SNAPSHOT"
+version := "0.6"
 licenses +=("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 
 scalaVersion := "2.12.1"
