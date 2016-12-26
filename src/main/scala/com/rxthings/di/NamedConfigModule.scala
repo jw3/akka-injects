@@ -6,7 +6,7 @@ import com.typesafe.config.{Config, ConfigValue}
 import com.typesafe.scalalogging.LazyLogging
 import net.codingwell.scalaguice.ScalaModule
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 /**
  * Bind Config values as @Named(path)
@@ -17,7 +17,7 @@ object NamedConfigModule {
 
 class NamedConfigModule private(config: Config) extends ScalaModule with LazyLogging {
   def configure(): Unit = {
-    config.entrySet.foreach { e =>
+    config.entrySet.asScala.foreach { e =>
       val k = e.getKey
       val v = e.getValue
       v.valueType() match {
