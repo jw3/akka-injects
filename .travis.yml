@@ -1,5 +1,8 @@
 language: scala
 
+before_install:
+ - chmod +x scripts/travis.sh
+
 scala:
    - 2.11.8
    - 2.12.1
