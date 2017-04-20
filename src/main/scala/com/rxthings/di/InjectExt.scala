@@ -20,7 +20,10 @@ import scala.collection.mutable
 class InjectExtImpl(val injector: Injector) extends Extension
 
 object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider with InjectExtBuilder {
-  private val manualModules: ThreadLocal[mutable.Set[Module]] = ThreadLocal.withInitial(() ⇒ mutable.Set[Module]())
+  private val manualModules: ThreadLocal[mutable.Set[Module]] = ThreadLocal.withInitial(
+    new java.util.function.Supplier[mutable.Set[Module]] {
+      override def get(): mutable.Set[Module] = mutable.Set[Module]()
+  })
 
   /**
    * Manually add modules to the injector

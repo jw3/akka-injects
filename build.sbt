@@ -3,6 +3,8 @@ name := "akka-injects"
 version := "0.7-SNAPSHOT"
 licenses +=("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 
+crossScalaVersions := Seq("2.11.8", "2.12.1")
+
 scalaVersion := "2.12.1"
 
 scalacOptions ++= Seq(
@@ -21,13 +23,17 @@ scalacOptions ++= Seq(
     "-Xlint:_"
 )
 
+scalacOptions in (Compile, doc) ++= Seq(
+    "-no-link-warnings" // Suppresses problems with Scaladoc links
+)
+
 resolvers ++= Seq(
     "jw3 at bintray" at "https://dl.bintray.com/jw3/maven",
     Resolver.jcenterRepo
 )
 
 libraryDependencies ++= {
-    val akkaVersion = "2.4.16"
+    val akkaVersion = "2.5.0"
     val scalatestVersion = "3.0.0"
 
     Seq(
