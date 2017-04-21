@@ -4,7 +4,7 @@ Akka Injects
 [![Dependencies](https://app.updateimpact.com/badge/701268856357916672/akka-injects.svg?config=compile)](https://app.updateimpact.com/latest/701268856357916672/akka-injects)
 
 Dependency Injection DSL for Akka.
-Powered by [Guice](https://github.com/google/guice) and implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.4.9/scala/extending-akka.html).
+Powered by [Guice](https://github.com/google/guice) and implemented as an [Akka Extension](http://doc.akka.io/docs/akka/2.5/scala/extending-akka.html).
 
 #### Goals
 
@@ -22,7 +22,7 @@ By default the Inject Extension will be loaded on first use.
 
 Or
 
-If you want to force load the extension at ```ActorSystem``` creation time you can [Load from Configuration](http://doc.akka.io/docs/akka/2.4.1/scala/extending-akka.html#Loading_from_Configuration).
+If you want to force load the extension at ```ActorSystem``` creation time you can [Load from Configuration](http://doc.akka.io/docs/akka/2.5/scala/extending-akka.html#Loading_from_Configuration).
 
 ```HOCON
 akka {
@@ -38,7 +38,7 @@ To include in your SBT project add a resolver to your sbt build
 
 and add the dependency
 
-```libraryDependencies += "com.rxthings" %% "akka-injects" % "0.5"```
+```libraryDependencies += "com.rxthings" %% "akka-injects" % "0.7"```
 
 #### Imports
 
@@ -109,7 +109,7 @@ val bob: Option[ActorRef] = injectActor[MyActor] named "bob"
 Injection within an Actor is easy and final
 ```scala
 class MyActor extends Actor {
-    val otherActor: ActorRef = inject[MyOtherActor] // otherActor parent == this
+    val otherActor: ActorRef = inject[MyOtherActor] // otherActor.parent == self
     val configProp: String = inject[String] named "myactor.hostname"
 }
 ```
