@@ -38,7 +38,7 @@ To include in your SBT project add a resolver to your sbt build
 
 and add the dependency
 
-```libraryDependencies += "com.rxthings" %% "akka-injects" % "0.7"```
+```libraryDependencies += "com.rxthings" %% "akka-injects" % "0.8"```
 
 #### Imports
 
