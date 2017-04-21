@@ -44,7 +44,6 @@ package object di {
   implicit def standardBuilder2builtOpt[T](builder: InjectionBuilder[T]): Option[T] = builder.optional
   implicit def actorBuilder2actorRefOpt[T <: Actor](builder: ActorInjectionBuilder[T]): Option[ActorRef] = builder.optional
   implicit def actorSystem2injectorProvider(implicit sys: ActorSystem): InjectorProvider = () => InjectExt(sys).injector
-  implicit def actorContext2actorSystem(implicit ctx: ActorContext): ActorSystem = ctx.system
 
   //\\ internals //\\
   private def requireNonNull(o: Any, msg: => Any): Unit = require(o != null, msg)
