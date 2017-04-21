@@ -37,6 +37,7 @@ object InjectActorSpec {
   class AnActor extends IAnActor
 
   class AnActorWithInjects extends NopActor {
+    import context._
     val injected: String = inject[String]
   }
 
