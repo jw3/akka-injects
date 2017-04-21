@@ -19,6 +19,7 @@ class ExampleOfTestingSpec extends InjectSpec with Matchers {
 }
 
 class InjectedActor extends NopActor {
+  import context._
   val name: String = inject[String] annotated "actor.name"
 }
 
