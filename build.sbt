@@ -23,10 +23,6 @@ scalacOptions ++= Seq(
     "-Xlint:_"
 )
 
-scalacOptions in (Compile, doc) ++= Seq(
-    "-no-link-warnings" // Suppresses problems with Scaladoc links
-)
-
 resolvers ++= Seq(
     "jw3 at bintray" at "https://dl.bintray.com/jw3/maven",
     Resolver.jcenterRepo
