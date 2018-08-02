@@ -1,6 +1,9 @@
+
+enablePlugins(GitVersioning)
+
 organization := "com.rxthings"
 name := "akka-injects"
-version := "0.9-SNAPSHOT"
+git.useGitDescribe := true
 licenses +=("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 
 crossScalaVersions := Seq("2.11.8", "2.12.6")
