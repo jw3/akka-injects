@@ -110,6 +110,6 @@ object InjectExtBuilder {
 
 private object Defaults {
   def actorSystem(sys: ActorSystem) = new ScalaModule {
-    def configure(): Unit = bind[ActorSystem].toInstance(sys)
+    override def configure(): Unit = bind[ActorSystem].toInstance(sys)
   }
 }

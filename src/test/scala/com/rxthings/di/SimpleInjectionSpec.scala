@@ -53,7 +53,7 @@ object SimpleInjectectionSpec {
   val intVal = Random.nextInt()
 
   object SimpleBindings extends ScalaModule {
-    def configure(): Unit = {
+    override def configure(): Unit = {
       bind[IDoExist].toInstance(DoesExists)
       bind[String].toInstance(stringVal)
       bind[Int].toInstance(intVal)

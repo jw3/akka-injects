@@ -16,7 +16,7 @@ object NamedConfigModule {
 }
 
 class NamedConfigModule private(config: Config) extends ScalaModule with LazyLogging {
-  def configure(): Unit = {
+  override def configure(): Unit = {
     config.entrySet.asScala.foreach { e =>
       val k = e.getKey
       val v = e.getValue

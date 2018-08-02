@@ -77,7 +77,7 @@ object InjectOptionalSpec {
   class AnActor extends NopActor
 
   object BindsStuff extends ScalaModule {
-    def configure(): Unit = {
+    override def configure(): Unit = {
       bind[IDoExist].to[DoesExists]
       bind[String].toInstance("somestring")
       bind[Int].toInstance(9999)

@@ -27,7 +27,7 @@ object ExampleOfTestingSpec {
 
   object M1 extends ScalaModule {
     val actorName = "bob"
-    def configure(): Unit = {
+    override def configure(): Unit = {
       bind[String].annotatedWithName("actor.name").toInstance(actorName)
     }
   }

@@ -13,9 +13,9 @@ object SpiTests {
 }
 
 class SpiModule1 extends ScalaModule {
-  def configure(): Unit = bind[String].toInstance(SpiTests.stringVal)
+  override def configure(): Unit = bind[String].toInstance(SpiTests.stringVal)
 }
 
 class SpiModule2 extends ScalaModule {
-  def configure(): Unit = bind[Int].toInstance(SpiTests.intVal)
+  override def configure(): Unit = bind[Int].toInstance(SpiTests.intVal)
 }

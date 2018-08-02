@@ -36,9 +36,9 @@ object ConfigModulesSpec {
 }
 
 class StringM extends ScalaModule {
-  def configure(): Unit = bind[String].toInstance(ConfigModulesSpec.sval)
+  override def configure(): Unit = bind[String].toInstance(ConfigModulesSpec.sval)
 }
 class IntM extends ScalaModule {
-  def configure(): Unit = bind[Int].toInstance(ConfigModulesSpec.ival)
+  override def configure(): Unit = bind[Int].toInstance(ConfigModulesSpec.ival)
 }
 

@@ -67,7 +67,7 @@ object MemberInjectionSpec {
   class ConstructorNamedInjected @Inject()(@Named("____NAME____") val intVal: Int)
 
   object M1 extends ScalaModule {
-    def configure(): Unit = {
+    override def configure(): Unit = {
       bind[PropertyInjected]
       bind[NamedPropertyInjected]
       bind[ConstructorInjected]

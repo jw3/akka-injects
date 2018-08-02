@@ -42,7 +42,7 @@ object InjectActorSpec {
   }
 
   object SimpleModule extends ScalaModule {
-    def configure(): Unit = {
+    override def configure(): Unit = {
       bind[IAnActor].to[AnActor]
       bind[String].toInstance("foo")
     }

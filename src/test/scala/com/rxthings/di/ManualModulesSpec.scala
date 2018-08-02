@@ -30,10 +30,10 @@ class ManualModulesSpec extends InjectSpec with Matchers {
 object ManualModulesSpec {
   object StringM extends ScalaModule {
     val value = UUID.randomUUID.toString
-    def configure(): Unit = bind[String].toInstance(value)
+    override def configure(): Unit = bind[String].toInstance(value)
   }
   object IntM extends ScalaModule {
     val value = Random.nextInt()
-    def configure(): Unit = bind[Int].toInstance(value)
+    override def configure(): Unit = bind[Int].toInstance(value)
   }
 }

@@ -91,7 +91,7 @@ object AnnotatedInjectionSpec {
   val unannotatedLongVal = 2L
 
   object AnnoBind extends ScalaModule {
-    def configure(): Unit = {
+    override def configure(): Unit = {
       bind[IUnannotatedActor].to[DannyDevito]
       bind[IBadActor].annotatedWith(Names.named(anno)).to[NickCage]
 
