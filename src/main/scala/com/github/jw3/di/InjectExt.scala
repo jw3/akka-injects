@@ -1,4 +1,4 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import java.util.ServiceLoader
 

@@ -1,6 +1,6 @@
-package com.rxthings.di
+package com.github.jw3.di
 
-import com.rxthings.di.test.{InjectSpec, SpiTests}
+import com.github.jw3.di.test.{InjectSpec, SpiTests}
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.scalatest.Matchers
 

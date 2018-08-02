@@ -1,9 +1,9 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import java.util.UUID
 
-import com.rxthings.di.ManualModulesSpec.{IntM, StringM}
-import com.rxthings.di.test.InjectSpec
+import com.github.jw3.di.ManualModulesSpec.{IntM, StringM}
+import com.github.jw3.di.test.InjectSpec
 import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers

@@ -1,8 +1,8 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import akka.actor.{Actor, ActorRef}
-import com.rxthings.di.InjectOptionalSpec.{BindsStuff, IDoExist, IDontExist}
-import com.rxthings.di.test.{InjectSpec, NopActor}
+import com.github.jw3.di.InjectOptionalSpec.{BindsStuff, IDoExist, IDontExist}
+import com.github.jw3.di.test.{InjectSpec, NopActor}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 

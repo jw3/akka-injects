@@ -1,6 +1,6 @@
-package com.rxthings.di
+package com.github.jw3.di
 
-import com.rxthings.di.test.InjectSpec
+import com.github.jw3.di.test.InjectSpec
 import com.typesafe.config.Config
 import net.codingwell.scalaguice.KeyExtensions._
 import net.codingwell.scalaguice._

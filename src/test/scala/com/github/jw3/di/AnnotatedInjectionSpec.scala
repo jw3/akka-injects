@@ -1,11 +1,13 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import java.util.UUID
 
 import akka.actor.ActorRef
+import com.github.jw3.di.AnnotatedInjectionSpec.{AnnoBind, IBadActor, ISomeUnSomeAn, IUnannotatedActor}
+import com.github.jw3.di.test.InjectSpec
 import com.google.inject.name.Names
-import com.rxthings.di.AnnotatedInjectionSpec.{IBadActor, _}
-import com.rxthings.di.test.{InjectSpec, NopActor}
+import com.github.jw3.di.AnnotatedInjectionSpec._
+import com.github.jw3.di.test.NopActor
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 

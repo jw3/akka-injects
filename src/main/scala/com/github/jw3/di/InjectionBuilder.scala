@@ -1,10 +1,10 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import javax.inject.Provider
 
 import akka.actor._
 import com.google.inject.{Injector, Key, TypeLiteral}
-import com.rxthings.di.Internals.BaseInjectionBuilder
+import Internals.BaseInjectionBuilder
 import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.KeyExtensions._
 import net.codingwell.scalaguice._

@@ -1,5 +1,4 @@
-package com.rxthings.di
-
+package com.github.jw3.di
 
 import com.typesafe.config.ConfigValueType._
 import com.typesafe.config.{Config, ConfigValue}

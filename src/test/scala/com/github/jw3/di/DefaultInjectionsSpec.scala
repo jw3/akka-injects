@@ -1,7 +1,7 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import akka.actor.ActorSystem
-import com.rxthings.di.test.InjectSpec
+import com.github.jw3.di.test.InjectSpec
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.scalatest.Matchers
 

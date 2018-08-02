@@ -1,10 +1,10 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import java.util.UUID
 
 import akka.actor.Actor
-import com.rxthings.di.SimpleInjectectionSpec._
-import com.rxthings.di.test.InjectSpec
+import com.github.jw3.di.SimpleInjectectionSpec._
+import com.github.jw3.di.test.InjectSpec
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 

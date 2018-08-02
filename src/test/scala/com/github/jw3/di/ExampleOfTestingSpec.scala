@@ -1,8 +1,9 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import akka.testkit.TestActorRef
-import com.rxthings.di.ExampleOfTestingSpec.M1
-import com.rxthings.di.test.{InjectSpec, NopActor}
+import com.github.jw3.di.test.InjectSpec
+import com.github.jw3.di.ExampleOfTestingSpec.M1
+import com.github.jw3.di.test.NopActor
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 

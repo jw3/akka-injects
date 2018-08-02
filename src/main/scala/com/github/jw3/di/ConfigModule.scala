@@ -1,4 +1,4 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import com.typesafe.config.Config
 import net.codingwell.scalaguice.ScalaModule

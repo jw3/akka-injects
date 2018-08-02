@@ -1,4 +1,4 @@
-package com.rxthings.di.test
+package com.github.jw3.di.test
 
 import akka.actor.Actor
 

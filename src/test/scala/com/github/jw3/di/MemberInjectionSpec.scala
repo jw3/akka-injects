@@ -1,9 +1,8 @@
-package com.rxthings.di
+package com.github.jw3.di
 
+import com.github.jw3.di.MemberInjectionSpec._
+import com.github.jw3.di.test.{BindingAnnotation1, BindingAnnotation2, InjectSpec}
 import javax.inject.{Inject, Named}
-
-import com.rxthings.di.MemberInjectionSpec.{M1, PropertyInjected, _}
-import com.rxthings.di.test.{BindingAnnotation1, BindingAnnotation2, InjectSpec}
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.Matchers
 

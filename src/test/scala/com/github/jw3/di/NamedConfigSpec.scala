@@ -1,4 +1,4 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import com.google.inject.Guice
 import com.google.inject.name.Names

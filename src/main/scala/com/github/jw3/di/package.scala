@@ -1,4 +1,4 @@
-package com.rxthings
+package com.github.jw3
 
 import akka.actor.{Actor, ActorContext, ActorRef, ActorSystem}
 import com.google.inject.Injector
@@ -10,7 +10,7 @@ import scala.reflect.runtime.universe._
  * the inject API
  */
 package object di {
-  import com.rxthings.di.Internals._
+  import Internals._
 
   type InjectorProvider = () => Injector
 

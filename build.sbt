@@ -1,7 +1,7 @@
 
 enablePlugins(GitVersioning)
 
-organization := "com.rxthings"
+organization := "com.github.jw3"
 name := "akka-injects"
 git.useGitDescribe := true
 licenses +=("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))

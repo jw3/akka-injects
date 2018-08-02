@@ -1,10 +1,10 @@
-package com.rxthings.di
+package com.github.jw3.di
 
 import java.util.UUID
 
 import akka.actor.ActorRef
 import akka.testkit.TestActorRef
-import com.rxthings.di.test.{InjectSpec, NopActor}
+import com.github.jw3.di.test.{InjectSpec, NopActor}
 import net.codingwell.scalaguice._
 import org.scalatest.Matchers
 
