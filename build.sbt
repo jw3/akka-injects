@@ -34,7 +34,7 @@ libraryDependencies ++= {
 
     Seq(
         "com.iheart" %% "ficus" % "1.4.0",
-        "net.codingwell" %% "scala-guice" % "4.1.0",
+        "net.codingwell" %% "scala-guice" % "4.2.0",
 
         "com.typesafe.akka" %% "akka-actor" % akkaVersion,
         "com.typesafe.akka" %% "akka-slf4j" % akkaVersion % Runtime,
