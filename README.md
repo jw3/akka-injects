@@ -34,11 +34,11 @@ akka {
 
 To include in your SBT project add a resolver to your sbt build
 
-```resolvers += "jw3 at bintray" at "https://dl.bintray.com/jw3/maven"```
+```resolvers += Resolver.bintrayRepo("jw3", "maven")```
 
 and add the dependency
 
-```libraryDependencies += "com.rxthings" %% "akka-injects" % "0.8"```
+```libraryDependencies += "com.rxthings" %% "akka-injects" % "0.9"```
 
 #### Imports
 
