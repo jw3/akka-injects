@@ -22,8 +22,9 @@ trait InjectSpec extends WordSpecLike {
    */
   def injectTest(name: String, mods: => Seq[Module] = Seq(), cfg: Option[Config] = None)(test: ActorSystem => Unit): Unit = {
     registerTest(name) {
-      InjectExt.addModules(mods: _*)
       val sys = ActorSystem(s"${name.replaceAll( """\W""", "_")}", cfg)
+      InjectExt(sys).addModules(mods: _*)
+
       try test(sys)
       finally {Await.ready(sys.terminate(), Duration.create("10s"))}
     }
