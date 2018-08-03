@@ -17,22 +17,32 @@ import scala.collection.mutable
  *
  * @param injector top level Guice Injector
  */
-class InjectExtImpl(val injector: Injector) extends Extension
-
-object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider with InjectExtBuilder {
+class InjectExtImpl(modules: Seq[Module]) extends Extension with InjectExtBuilder {
   private val manualModules: ThreadLocal[mutable.Set[Module]] = ThreadLocal.withInitial(
     new java.util.function.Supplier[mutable.Set[Module]] {
       override def get(): mutable.Set[Module] = mutable.Set[Module]()
-  })
+    }
+  )
+  private var acceptingModules: Boolean = true
 
   /**
-   * Manually add modules to the injector
-   * All modules must be added prior to creating the ActorSystem
-   */
-  def addModules(m: Module*): InjectExtBuilder = {
+    * Manually add modules to the injector
+    * All modules must be added prior to creating the ActorSystem
+    */
+  def addModules(m: Module*): InjectExtImpl = {
+    if(!acceptingModules) throw new UnsupportedOperationException("injector was already initialized")
     manualModules.set(manualModules.get() ++ m)
     this
   }
+
+  lazy val injector: Injector = {
+    acceptingModules = false
+    try Guice.createInjector(modules ++ manualModules.get: _*)
+    finally manualModules.remove()
+  }
+}
+
+object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider {
 
   // internals \\
 
@@ -41,17 +51,16 @@ object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider wit
 
     val config = sys.settings.config
     val modules = config.getAs[String](ModuleDiscoveryModeKey).getOrElse(DefaultModuleDiscoveryModeMode) match {
-      case ManualModuleDiscovery => manualModules.get().toList
+      case ManualModuleDiscovery => List()
       case CfgModuleDiscovery => config.getAs[Seq[String]](CfgModuleDiscoveryKey).map(_.map(strToModule)).getOrElse(Seq()).toList
       case SpiModuleDiscovery => ServiceLoader.load(classOf[Module]).iterator.asScala.toList
       case v => throw new IllegalArgumentException(s"invalid $ModuleDiscoveryModeKey value, $v")
     }
-    manualModules.remove()
 
     val finalModules = addCfgModule(config) :: modules
     val defaultModules = Seq(Defaults.actorSystem(sys))
-    val injector = Guice.createInjector(finalModules ++ defaultModules: _*)
-    new InjectExtImpl(injector)
+
+    new InjectExtImpl(finalModules ++ defaultModules)
   }
 
   override def lookup() = InjectExt
@@ -69,7 +78,7 @@ object InjectExt extends ExtensionId[InjectExtImpl] with ExtensionIdProvider wit
  * Defines the module adding interface on the InjectExt
  */
 trait InjectExtBuilder {
-  this: ExtensionId[_] =>
+  this: Extension =>
   def addModules(m: Module*): InjectExtBuilder
 }
 
